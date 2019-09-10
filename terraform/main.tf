@@ -57,18 +57,20 @@ Check out all the available sub-modules at:
 https://github.com/terraform-aws-modules/terraform-aws-security-group/tree/master/modules
 
  */
-module "open_all_sg" {
+module "open_ssh_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "3.1.0"
 
-  name        = "open-to-all-sg"
-  description = "Security group to make all ports publicly open...not secure at all"
+  name        = "open-ssh-sg"
+  description = "security group that allows ssh and all egress traffic"
 
   vpc_id              = module.sandbox_vpc.vpc_id
   ingress_cidr_blocks = ["10.0.0.0/26"]
   ingress_with_cidr_blocks = [
     {
-      rule        = "all-all"
+      from_port = 22
+      to_port = 22
+      protocol = "tcp"
       cidr_blocks = "0.0.0.0/0"
     },
   ]
@@ -76,7 +78,9 @@ module "open_all_sg" {
   egress_cidr_blocks = ["10.0.0.0/26"]
   egress_with_cidr_blocks = [
     {
-      rule        = "all-all"
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
       cidr_blocks = "0.0.0.0/0"
     },
   ]
@@ -115,7 +119,7 @@ resource "aws_instance" "cluster_master" {
   # If the expression in the following list itself returns a list, remove the
   # brackets to avoid interpretation as a list of lists. If the expression
   # returns a single list item then leave it as-is and remove this TODO comment.
-  vpc_security_group_ids      = [module.open_all_sg.this_security_group_id]
+  vpc_security_group_ids      = [module.open_ssh_sg.this_security_group_id]
   subnet_id                   = module.sandbox_vpc.public_subnets[0]
   associate_public_ip_address = true
 
@@ -149,7 +153,7 @@ resource "aws_instance" "cluster_workers" {
   # If the expression in the following list itself returns a list, remove the
   # brackets to avoid interpretation as a list of lists. If the expression
   # returns a single list item then leave it as-is and remove this TODO comment.
-  vpc_security_group_ids      = [module.open_all_sg.this_security_group_id]
+  vpc_security_group_ids      = [module.open_ssh_sg.this_security_group_id]
   subnet_id                   = module.sandbox_vpc.public_subnets[0]
   associate_public_ip_address = true
 
