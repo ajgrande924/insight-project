@@ -1,6 +1,13 @@
 # insight_project
 > todo insight project
 
+### todo
+
+  - [x] change security group from open_all_sg to open_ssh_sg
+  - [-] utilize packer to build custom ami w/ desired software
+  - [ ] ability to remote exec into instance to install software such as nginx or docker 
+  - [ ] ability to pull docker image from global registry to aws instance
+
 ### terraform setup
 
 Add aws credentials to `.profile` or `.zprofile`:
