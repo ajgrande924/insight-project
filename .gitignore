@@ -1,0 +1,81 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.rdb
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# WebStorm Specific #
+#####################
+.idea
+.project
+.sass
+.sass-cache
+
+# Node Specific #
+#####################
+.nodemonignore
+/node_modules/
+npm-debug.log
+
+# Heroku Specific #
+#####################
+.env
+/tmp
+
+# Grunt Specific #
+#####################
+.temp
+
+# Emacs Specific #
+#####################
+*~
+
+# Vim Specific #
+#####################
+*.swp
+
+# Vagrant Specific #
+#####################
+.vagrant
+
+# Nyc Specific #
+#####################
+.nyc_output/
+coverage/
+
+# Terraform Specific #
+#####################
+*.tfstate
