@@ -11,11 +11,11 @@
     "source_ami": "ami-03286c54f2490b96e",
     "instance_type": "m4.large",
     "ssh_username": "ubuntu",
-    "ami_name": "aj_packer_example_{{timestamp}}"
+    "ami_name": "test_ami_{{timestamp}}"
   }],
   "provisioners": [{
     "type": "shell",
-    "scripts": [  "install_software.sh"   ],
+    "scripts": [ "install.sh" ],
     "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
     "pause_before": "10s"
   }]
