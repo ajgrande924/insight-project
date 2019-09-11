@@ -158,3 +158,7 @@ Options:
   - [x] utilize packer to build custom ami w/ desired software
   - [ ] ability to remote exec into instance to install software such as nginx or docker 
   - [ ] ability to pull docker image from global registry to aws instance
+
+### references
+
+  - terraform module, ssh only from your current local ip (from John)
