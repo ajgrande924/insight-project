@@ -1,6 +1,24 @@
 # insight_project
 > todo insight project
 
+## Table of Contents
+
+  - [Introduction](README.md#Introduction)
+  - [Tech Stack](README.md#Tech-Stack)
+  - [Setup](README.md#Setup)
+  - [Notes](README.md#Notes)
+
+## Introduction
+
+## Tech Stack
+
+  - `terraform @ >=0.12`
+  - `packer @ >= 1.4.3`
+
+## Setup
+
+## Notes
+
 ### terraform setup
 
 Add aws credentials to `.profile` or `.zprofile`:
