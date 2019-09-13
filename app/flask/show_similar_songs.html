@@ -1,0 +1,53 @@
+<html>
+<header><title>Similar Songs</title></header>
+  <head>
+    <style>
+      #similar_songs_table_wrapper {
+        width: 60%;
+        margin: 0 auto;
+      }
+      .ins_present {
+          background: #b1ffb1;
+      }
+      #base_song {
+        margin-left: 10%;
+        margin-bottom: 20px;
+      }
+      table#base_song td, table#base_song tr {
+        width: 260px;
+        border: 1px solid black;
+        text-align: left;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin-left:5%">Similar Songs</h1>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.semanticui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
+    <script src="/load_similar_songs.js" type="text/javascript"></script>
+    <table id="base_song" style="width:560px">
+      <tr>
+        <td>Song Name</td>
+        <td id="base_song_name"></td>
+      </tr>
+      <tr>
+        <td>Num of Instruments</td>
+        <td id="base_song_num_of_ins"></td>
+      </tr>
+      <tr>
+        <td>Instruments</td>
+        <td id="base_song_ins"></td>
+      </tr>
+    </table>
+    <p style="margin-left:10%;">Any instruments in the below table highlighted in <span class="ins_present">green</span> is one that's shared with selected song.</p>
+    <br>
+    <br>
+    <table id="similar_songs_table" class="ui celled table" style="width:100%"></table>
+  </body>
+</html>

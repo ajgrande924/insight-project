@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: db
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+    networks:
+      - db_network
+  flask:
+    build: .
+    image: flask
+    container_name: flask
+    ports: 
+      - 80:80
+    volumes:
+      - .:/app
+    networks:
+      - db_network
+    depends_on:
+      - db
+networks:
+  db_network:
+    driver: bridge
+volumes:
+  dbdata:
