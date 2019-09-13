@@ -14,7 +14,7 @@ for filehash,names in data.items():
     line3 = re.sub(r"\ {2,}"," ", line2)
     file_name_seq.append([filename, line3])
 
-with open('hash_name.csv', 'w') as file:
+with open('hash_names.csv', 'w') as file:
     header_names = ['filehash','name']
     writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     writer.writerows([header_names])

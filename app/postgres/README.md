@@ -7,7 +7,7 @@ The scripts were run in the order:
 # generate md5_to_paths.json
 curl http://hog.ee.columbia.edu/craffel/lmd/md5_to_paths.json > md5_to_paths.json
 
-# generate hash_name.csv
+# generate hash_names.csv
 python3 create_midi_instrument_csv.py
 
 # Run each line in PostgreSQL shell

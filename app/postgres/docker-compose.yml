@@ -1,0 +1,9 @@
+version: '3'
+services:
+  db:
+    image: postgres:11-alpine
+    container_name: db
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+volumes:
+  dbdata:

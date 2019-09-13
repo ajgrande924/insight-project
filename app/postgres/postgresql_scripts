@@ -6,7 +6,7 @@ CREATE TABLE hash_name (
 );
 
 # Load data into `hash_name`
-\copy hash_name FROM '/path/to/file/hash_name.csv' with (format csv,header true, delimiter ',');
+\copy hash_name FROM 'hash_names.csv' with (format csv,header true, delimiter ',');
 
 # Table that maps midi-instrument-code to instrument-name
 CREATE TABLE midi_instrument(
@@ -15,4 +15,5 @@ CREATE TABLE midi_instrument(
 	family VARCHAR (55) NOT NULL
 );
 
-\copy midi_instrument FROM '/path/to/file/midi_instruments.csv' with (format csv,header true, delimiter ',');
+# Load data into midi_instrument
+\copy midi_instrument FROM 'midi_instruments.csv' with (format csv,header true, delimiter ',');
