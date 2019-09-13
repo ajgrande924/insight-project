@@ -2,9 +2,30 @@
 
 ### idea
 
-As an industry, we are quick to adopt practices that increase the flexibility of developement and velocity of deployment. But how much confidence do we have on the complex systems we put out in production. Chaos engineering is the discipline of experimenting on a distributed system in order to gain confidence in a system's capability to withstand turbulent conditions in production. To address this uncertainty, we will be running a set of experiments to uncover systemic weaknesses.
+##### containerize, iac, orchestration
 
 In this project, we will be performing the experiments on a music recommendation data pipeline. The original source code for this application can be found at this [link](https://github.com/ajgrande924/insight-music-project).
+
+Scale is a music recommendation engine that finds similar songs based on shared instruments. The data pipeline is shown below:
+
+S3 -> Spark -> Postgres -> Flask (replace w/ diagram)
+
+  - S3: storage of midi files
+  - Spark: extract data about instruments from midi files
+  - Postgres: store results
+  - Flask: view results
+
+In this part of the project, I will be containerizing the data pipeline and automating the deployment utilizing IaC & container orchestration.
+
+Services within the kubernetes cluster:
+
+  - spark (stateless)
+  - postgres (stateful)
+  - flask (stateless)
+
+#### chaos testing
+
+As an industry, we are quick to adopt practices that increase the flexibility of developement and velocity of deployment. But how much confidence do we have on the complex systems we put out in production. Chaos engineering is the discipline of experimenting on a distributed system in order to gain confidence in a system's capability to withstand turbulent conditions in production. To address this uncertainty, we will be running a set of experiments to uncover systemic weaknesses.
 
 In this experiment, we will be deploying two instances of the data pipeline, a control group and an experimental group. We also will define a 'steady state' which will indicate some sort of normal behavior for the pipeline.
 
@@ -23,7 +44,8 @@ Results:
 
 ### tasks
 
-  - test application and containerize
+  - test application locally
+  - containerize data pipeline
   - deploy a simple example on aws eks and enable Cloudwatch 
   - deploy real project on aws eks w/ a control group and experimental group; enable cloud watch
   - perform attacks on experimental group at container, pod, zone level
