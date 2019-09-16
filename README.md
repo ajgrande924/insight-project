@@ -54,8 +54,7 @@ Experiments:
 
 ## Tech Stack
 
-  - `terraform @ >=0.12`
-  - `packer @ >= 1.4.3`
+  - todo
 
 ## Setup
 
@@ -98,48 +97,8 @@ What baseline metrics to collect for CE, or use for comparison between experimen
     - Context
     - Breadcrumbs
 
-### packer setup
-
- - creates ami w/ all of the necessary software
- - speeds up boot times of instances
- - common approach when you run a horizontally scaled app layer
-
-```sh
-# build custom ami: test_ami
-cd packer/test_ami
-packer build -machine-readable packer.json
-```
-Add aws default region to `.profile` or `.zprofile`:
-```sh
-export AWS_DEFAULT_REGION=us-west-2
-```
-
-Created script to list and delete user amis (requires `awscli`):
-
-```sh
-Usage: ./aws_ami_cleaner.sh [options]
-
-Options:
-
-  -a, --aws_account_id <id>  aws account id
-  -l, --list                 list user amis
-  -d, --delete_all           delete all user amis
-  -h, --help                 output usage information
-```
-
-```sh
-# list user amis
-./aws_ami_cleaner.sh -a <aws_account_id> -l
-
-# delete all user amis
-./aws_ami_cleaner.sh -a <aws_account_id> -d
-```
-
 ### todo
 
-  - [x] utilize packer to build custom ami w/ desired software
-  - [ ] ability to remote exec into instance to install software such as nginx or docker 
-  - [ ] ability to pull docker image from global registry to aws instance
   - [ ] test application locally
   - [ ] containerize data pipeline 
   - [ ] deploy a simple example on aws eks and enable Cloudwatch 
