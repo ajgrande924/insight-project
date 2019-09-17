@@ -1,6 +1,6 @@
-FROM python:3
+FROM python:3.7-alpine
 COPY . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-CMD ["app.py"]
+EXPOSE 8080
+CMD ["python", "app.py"]
