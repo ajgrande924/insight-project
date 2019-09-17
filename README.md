@@ -4,7 +4,6 @@
 ## Table of Contents
 
   - [Introduction](README.md#Introduction)
-  - [Tech Stack](README.md#Tech-Stack)
   - [Setup](README.md#Setup)
   - [Notes](README.md#Notes)
 
@@ -52,11 +51,43 @@ Experiments:
 
   - application receives increased 
 
-## Tech Stack
-
-  - todo
-
 ## Setup
+
+#### setup eks cluster
+
+The application requires the following dependencies:
+
+  - jq
+  - awscli
+  - kubetcl
+  - aws-iam-authenticator
+  - terraform @ >= 0.12
+
+To start the application, you can run `./oneclick deploy`, which essentially runs these commands, but with auto approve:
+```sh
+# provision with terraform
+cd terraform
+terraform init
+terraform plan
+terraform apply
+
+# add new context to ~/.kube/config
+aws eks update-kubeconfig --name <cluster_name> # test-eks-ajdev
+
+# checks
+kubectl version
+kubetctl get nodes
+kubectl config current-context
+kubectl config view
+```
+
+To bring down the application you can run `./oneclick destroy`, which essentially runs these commands, but with auto approve:
+```sh
+# destroy infrastructure
+cd terraform
+terraform destroy -auto-approve
+rm -rf .terraform terraform.tfstate*
+```
 
 ## Notes
 

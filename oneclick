@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# bail out if anything fails
+set -e
+
+deploy () {
+  echo ">>> oneclick deploy"
+
+  echo ">>> provisioning infra with terraform..."
+  cd terraform
+  terraform init -input=false
+  terraform apply -input=false -auto-approve
+
+  echo ">>> configure kubectl for eks..."
+  TF_OUTPUT=$(terraform output -json)
+  CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
+  aws eks update-kubeconfig --name ${CLUSTER_NAME}
+
+  echo ">>> checking kubectl..."
+  kubectl version
+  kubectl get nodes
+  kubectl config current-context
+  kubectl config view
+
+  echo ">>> complete"
+}
+
+destroy () {
+  echo ">>> oneclick destroy"
+
+  echo ">>> destroying infra with terraform..."
+  cd terraform
+  terraform destroy -auto-approve
+
+  echo ">>> cleanup..."
+  rm -rf .terraform terraform.tfstate*
+  # rm -rf ~/.kube/config
+
+  echo ">>> complete"
+}
+
+"$@"
