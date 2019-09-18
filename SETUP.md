@@ -81,7 +81,7 @@ helm install stable/grafana \
     --name grafana \
     --namespace grafana \
     --set persistence.storageClassName="gp2" \
-    --set adminPassword="EKS!sAWSome" \
+    --set adminPassword="notadmin" \
     --set datasources."datasources\.yaml".apiVersion=1 \
     --set datasources."datasources\.yaml".datasources[0].name=Prometheus \
     --set datasources."datasources\.yaml".datasources[0].type=prometheus \
@@ -93,7 +93,7 @@ helm install stable/grafana \
 # check grafana namespace
 kubectl get all -n grafana
 
-# get grafan elb url
+# get grafana elb url
 export ELB=$(kubectl get svc -n grafana grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 echo "http://$ELB"
 

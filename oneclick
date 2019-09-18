@@ -3,8 +3,8 @@
 # bail out if anything fails
 set -e
 
-deploy () {
-  echo ">>> oneclick deploy"
+setup_eks () {
+  echo ">>> setup_eks starting..."
 
   echo ">>> provisioning infra with terraform..."
   cd terraform
@@ -22,7 +22,81 @@ deploy () {
   kubectl config current-context
   kubectl config view
 
-  echo ">>> complete"
+  echo ">>> setup_eks complete"
+}
+
+setup_helm () {
+  echo ">>> setup_helm starting..."
+
+  # delete cluster tiller
+  kubectl get all --all-namespaces | grep tiller
+  kubectl delete deployment tiller-deploy -n kube-system
+  kubectl delete service tiller-deploy -n kube-system
+  kubectl get all --all-namespaces | grep tiller
+
+  # initialize helm & add the service account
+  helm init
+  kubectl create serviceaccount --namespace kube-system tiller
+  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+
+  echo ">>> setup_helm complete"
+}
+
+setup_prometheus () {
+  echo ">>> setup_prometheus starting..."
+
+  # install prometheus
+  kubectl create namespace prometheus
+  helm install stable/prometheus \
+      --name prometheus \
+      --namespace prometheus \
+      --set alertmanager.persistentVolume.storageClass="gp2" \
+      --set server.persistentVolume.storageClass="gp2"
+
+  # check prometheus namespace
+  kubectl get all -n prometheus
+
+  # debug
+  #kubectl port-forward -n prometheus deploy/prometheus-server 8080:9090
+
+  echo ">>> setup_prometheus complete"
+}
+
+setup_grafana () {
+  echo ">>> setup_grafana starting..."
+
+  # install grafana
+  kubectl create namespace grafana
+  helm install stable/grafana \
+      --name grafana \
+      --namespace grafana \
+      --set persistence.storageClassName="gp2" \
+      --set adminPassword="notadmin" \
+      --set datasources."datasources\.yaml".apiVersion=1 \
+      --set datasources."datasources\.yaml".datasources[0].name=Prometheus \
+      --set datasources."datasources\.yaml".datasources[0].type=prometheus \
+      --set datasources."datasources\.yaml".datasources[0].url=http://prometheus-server.prometheus.svc.cluster.local \
+      --set datasources."datasources\.yaml".datasources[0].access=proxy \
+      --set datasources."datasources\.yaml".datasources[0].isDefault=true \
+      --set service.type=LoadBalancer
+
+  # check grafana namespace
+  kubectl get all -n grafana
+
+  # get grafana elb url
+  export ELB=$(kubectl get svc -n grafana grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  echo "grafana_elb_url: http://$ELB"
+
+  echo ">>> setup_grafana complete"
+}
+
+deploy () {
+  echo ">>> oneclick deploy"
+  setup_eks
+  setup_helm
+  setup_prometheus
+  setup_grafana
 }
 
 destroy () {
