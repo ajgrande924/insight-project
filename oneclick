@@ -25,21 +25,23 @@ setup_eks () {
   echo ">>> setup_eks complete"
 }
 
-setup_helm () {
-  echo ">>> setup_helm starting..."
-
+cleanup_tiller () {
+  echo ">>> cleanup_tiller starting..."
   # delete cluster tiller
   kubectl get all --all-namespaces | grep tiller
   kubectl delete deployment tiller-deploy -n kube-system
   kubectl delete service tiller-deploy -n kube-system
   kubectl get all --all-namespaces | grep tiller
+  echo ">>> cleanup_tiller complete"
+}
 
+setup_helm () {
+  echo ">>> setup_helm starting..."
   # initialize helm & add the service account
   helm init
   kubectl create serviceaccount --namespace kube-system tiller
   kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
   kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-
   echo ">>> setup_helm complete"
 }
 

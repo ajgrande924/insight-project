@@ -82,3 +82,6 @@ coverage/
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
+
+terraform/kubeconfig_*
+terraform/config-map-aws-auth_*

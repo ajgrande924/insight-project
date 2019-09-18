@@ -2,17 +2,6 @@
 
 #### containerize
 
-In this project, we will be performing the experiments on a music recommendation data pipeline. The original source code for this application can be found at this [link](https://github.com/ajgrande924/insight-music-project).
-
-Scale is a music recommendation engine that finds similar songs based on shared instruments. The data pipeline is shown below:
-
-S3 -> Spark -> Postgres -> Flask (replace w/ diagram)
-
-  - S3: storage of midi files
-  - Spark: extract data about instruments from midi files
-  - Postgres: store results
-  - Flask: view results
-
 In this part of the project, I will be containerizing the data pipeline and automating the deployment utilizing IaC & container orchestration.
 
 Services within the kubernetes cluster:
