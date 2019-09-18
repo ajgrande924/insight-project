@@ -26,7 +26,7 @@ Services within the kubernetes cluster:
 **kubernetes architecture**
 
 <p align="center"> 
-  <img src="../media/kube_arch.png" alt="kube_arch" width="800px"/>
+  <img src="./media/kube_arch.png" alt="kube_arch" width="800px"/>
 </p>
 
 #### chaos
