@@ -1,6 +1,6 @@
 ## Notes
 
-#### containerize, iac, orchestration
+#### containerize
 
 In this project, we will be performing the experiments on a music recommendation data pipeline. The original source code for this application can be found at this [link](https://github.com/ajgrande924/insight-music-project).
 
@@ -21,7 +21,15 @@ Services within the kubernetes cluster:
   - postgres (stateful, kube / rds?)
   - flask (stateless)
 
-#### chaos testing
+#### orchestration
+
+**kubernetes architecture**
+
+<p align="center"> 
+  <img src="../media/kube_arch.png" alt="kube_arch" width="800px"/>
+</p>
+
+#### chaos
 
 As an industry, we are quick to adopt practices that increase the flexibility of developement and velocity of deployment. But how much confidence do we have on the complex systems we put out in production. Chaos engineering is the discipline of experimenting on a distributed system in order to gain confidence in a system's capability to withstand turbulent conditions in production. To address this uncertainty, we will be running a set of experiments to uncover systemic weaknesses.
 
@@ -78,15 +86,6 @@ What baseline metrics to collect for CE, or use for comparison between experimen
     - Stack traces
     - Context
     - Breadcrumbs
-
-#### todo
-
-  - [ ] test application locally
-  - [ ] containerize data pipeline 
-  - [ ] deploy a simple example on aws eks and enable Cloudwatch 
-  - [ ] deploy real project on aws eks w/ a control group and experimental group; enable cloud watch
-  - [ ] perform attacks on experimental group at container, pod, zone level
-  - [ ] iterate over infrastructure / architechture based on results
 
 #### references
 

@@ -94,9 +94,9 @@ setup_grafana () {
 deploy () {
   echo ">>> oneclick deploy"
   setup_eks
-  setup_helm
-  setup_prometheus
-  setup_grafana
+  # setup_helm
+  # setup_prometheus
+  # setup_grafana
 }
 
 destroy () {
