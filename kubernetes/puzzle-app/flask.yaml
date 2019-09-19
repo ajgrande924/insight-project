@@ -1,34 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: flask-deployment
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: flask-app
   replicas: 2
   template:
     metadata:
       labels:
-        app: nginx
+        app: flask-app
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.8
+      - name: flask
+        image: ajgrande924/puzzle-flask:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: nginx-app
-  name: nginx-svc
-  namespace: default
+    app: flask-app
+  name: flask-svc
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 80
   selector:
-    app: nginx-app
+    app: flask-app

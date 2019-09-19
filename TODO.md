@@ -2,6 +2,32 @@
 
 #### containerize
 
+  9-16-19
+  
+  - [ ] containerize simple flask app
+  
+  ```sh
+  cd app/simple-flask
+  docker build -t ajgrande924/simple-flask .
+  docker login
+  docker push ajgrande924/simple-flask
+  ```
+
+  9-18-19
+
+  - [ ] containerize puzzle flask app
+  ```sh
+  # build
+  cd app/puzzle-flask
+  docker build -t ajgrande924/puzzle-flask .
+  docker login
+  docker push ajgrande924/puzzle-flask
+
+  # run
+  dex <container> sh
+  python -c  'import database; database.init_db()'
+  ```
+
   - [ ] containerize flask application
 
 #### orchestration
@@ -13,9 +39,40 @@
 
 9-18-19
 
+  - [x] nginx deployment available outside of kube cluster: `<hash>.us-west-2.elb.amazonaws.com`
+
+  You can do this two ways:
+
+  ```sh
+  # 1. use yaml in repo
+  
+  # bringup
+  kubectl apply -f kubernetes/nginx-app/nginx.yaml
+  
+  # teardown
+  kubectl delete -f kubernetes/nginx-app/nginx.yaml
+
+  # 2. specify through kubectl only
+  
+  # bringup
+  kubectl create deployment --image nginx nginx-app
+  kubectl scale deployment --replicas 2 nginx-app
+  kubectl expose deployment nginx-app --port=80 --type=LoadBalancer
+  
+  # teardown
+  kubectl delete svc nginx-app
+  kubectl delete deployment nginx-app
+  ```
+
   - [ ] bring up simple flask application (stateless) on kube cluster
   - [ ] bring up simple postgres db (stateful) on kube cluster
   - [ ] communication between flask and postgres db
   - [ ] flask application accessible outside of kube cluster
+
+  all of these in puzzle flask - to finish
+  ```sh
+  kubectl apply -f kubernetes/puzzle-app/postgres.yml
+  kubectl apply -f kubernetes/puzzle-app/flask.yml
+  ```
 
 #### chaos

@@ -82,3 +82,7 @@ What baseline metrics to collect for CE, or use for comparison between experimen
   - [awesome-chaos-engineering](https://github.com/dastergon/awesome-chaos-engineering)
   - [chaos engineering monitoring metrics guide](https://www.gremlin.com/community/tutorials/chaos-engineering-monitoring-metrics-guide/)
   - [Why run Spark on Kubernetes?](https://medium.com/@rachit1arora/why-run-spark-on-kubernetes-51c0ccb39c9b)
+
+be very valuable by mastering open source tools to help companies with vendor lock in
+
+give kube more than it can handle by oversubscription - best practices
