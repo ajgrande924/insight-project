@@ -15,7 +15,8 @@
 
   9-18-19
 
-  - [ ] containerize puzzle flask app
+  - [x] containerize puzzle flask app
+  
   ```sh
   # build
   cd app/puzzle-flask
@@ -64,15 +65,18 @@
   kubectl delete deployment nginx-app
   ```
 
-  - [ ] bring up simple flask application (stateless) on kube cluster
-  - [ ] bring up simple postgres db (stateful) on kube cluster
-  - [ ] communication between flask and postgres db
-  - [ ] flask application accessible outside of kube cluster
+  - [x] bring up simple flask application (stateless) on kube cluster
+  - [x] bring up simple postgres db (stateful) on kube cluster
+  - [x] communication between flask and postgres db
+  - [x] flask application accessible outside of kube cluster
 
-  all of these in puzzle flask - to finish
   ```sh
-  kubectl apply -f kubernetes/puzzle-app/postgres.yml
-  kubectl apply -f kubernetes/puzzle-app/flask.yml
+  # handles all  4 list items above
+  kubectl apply --recursive -f kubernetes/puzzle-app # ka
+  kubectl exec -i -t <flask_container_name> sh # kex
+  python -c  'import database; database.init_db()'
+  exit
+  kubectl delete --recursive -f kubernetes/puzzle-app # krmf
   ```
 
 #### chaos
