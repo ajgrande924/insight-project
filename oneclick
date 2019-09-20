@@ -25,6 +25,16 @@ setup_eks () {
   echo ">>> setup_eks complete"
 }
 
+cleanup_prom_graf () {
+  echo ">>> cleanup_prom_graf starting..."
+  # delete prometheus / grafana
+  helm del --purge grafana
+  kubectl delete namespaces grafana
+  helm del --purge prometheus
+  kubectl delete namespace prometheus
+  echo ">>> cleanup_prom_graf complete"
+}
+
 cleanup_tiller () {
   echo ">>> cleanup_tiller starting..."
   # delete cluster tiller
@@ -110,7 +120,7 @@ destroy () {
 
   echo ">>> cleanup..."
   rm -rf .terraform terraform.tfstate*
-  # rm -rf ~/.kube/config
+  rm -rf ~/.kube/config
 
   echo ">>> complete"
 }

@@ -23,3 +23,23 @@ The existing batch data pipeline is called Scale. It is a music recommendation e
   - Spark: extract data about instruments from midi files
   - Postgres: store results
   - Flask: view results
+
+**chaos experiments**
+
+Experiment 1: Resource exhaustion of containers
+
+hypothesis:
+
+  - increased latency in incoming requests
+  - load balancer routes traffic away from availability zone 2
+  - receive alert message
+
+Experiment 2: Kill Stateful Replica Pod
+
+scenario: Master postres replica pod is killed
+
+hypothesis:
+
+  - brief unavailability of data for a x duration of time
+  - replica should get promoted (slave to master)
+  - new clone should kick off and system recovers

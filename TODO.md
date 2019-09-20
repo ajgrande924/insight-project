@@ -4,7 +4,7 @@
 
   9-16-19
   
-  - [ ] containerize simple flask app
+  - [x] containerize simple flask app
   
   ```sh
   cd app/simple-flask
@@ -16,7 +16,7 @@
   9-18-19
 
   - [x] containerize puzzle flask app
-  
+
   ```sh
   # build
   cd app/puzzle-flask
@@ -28,6 +28,8 @@
   dex <container> sh
   python -c  'import database; database.init_db()'
   ```
+  
+  9-20-19
 
   - [ ] containerize flask application
 
