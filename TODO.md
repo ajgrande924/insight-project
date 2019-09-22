@@ -85,3 +85,14 @@
 
   - [ ] setup monitoring on kube cluster, with prometheus/grafana, using helm charts
   - [ ] use stable/prometheus-operator instead of stable/prometheus and stable/grafana
+
+  9-22-19
+
+  - [x] run simple kube-monkey example on minikube
+  ```sh
+  # minikube w/ kube monkey
+  ./run_minikube start_mk
+  ./run_minikube start_chaos
+  ./run_minikube cleanup_chaos
+  ./run_minikube cleanup_mk
+  ```
