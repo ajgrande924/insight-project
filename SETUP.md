@@ -16,7 +16,7 @@ The application requires the following dependencies:
 To start the application, you can run the following steps:
 
 | Step | Command | Description |
-| :---: | :----: | :---: |
+| :---: | :---- | :---- |
 | 1 | `./helpers setup_eks` | setup vpc + eks cluster |
 | 2 | `./helpers helm_init` | instantiate helm + tiller |
 | 3 | `./helpers setup_monitoring` | setup monitoring |
@@ -38,7 +38,7 @@ kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-passwor
 To bring down the application you can run the following steps:
 
 | Step | Command | Description |
-| :---: | :----: | :---: |
+| :---: | :---- | :---- |
 | 1 | `./helpers cleanup_monitoring` | cleanup monitoring |
 | 2 | `./helpers cleanup_tiller` | cleanup tiller |
 | 3 | `./helpers teardown` | destroy eks cluster + vpc |
