@@ -82,3 +82,5 @@
   ```
 
 #### chaos
+
+  - [ ] setup monitoring on kube cluster, with prometheus/grafana, using helm charts
