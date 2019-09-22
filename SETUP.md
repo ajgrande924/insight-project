@@ -15,10 +15,11 @@ The application requires the following dependencies:
 
 To start the application, you can run the following steps:
 
-  - setup vpc + eks cluster: `./oneclick setup_eks`
-  - instantiate helm + tiller: `./oneclick setup_helm`
-  - setup prometheus: `./oneclick setup_prometheus`
-  - setup grafana: `./onceclick setup_grafana`
+| Step | Command | Description |
+| :---: | :----: | :---: |
+| 1 | `./helpers setup_eks` | setup vpc + eks cluster |
+| 2 | `./helpers helm_init` | instantiate helm + tiller |
+| 3 | `./helpers setup_monitoring` | setup monitoring |
 
 ```
 # get grafana admin pw
@@ -36,6 +37,9 @@ kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-passwor
 
 To bring down the application you can run the following steps:
 
-  - cleanup prometheus + grafana: `./oneclick cleanup_prom_graf`
-  - cleanup tiller: `./oneclick cleanup_tiller`
-  - destroy eks cluster + vpc: `./oneclick destroy`
+| Step | Command | Description |
+| :---: | :----: | :---: |
+| 1 | `./helpers cleanup_monitoring` | cleanup monitoring |
+| 2 | `./helpers cleanup_tiller` | cleanup tiller |
+| 3 | `./helpers teardown` | destroy eks cluster + vpc |
+

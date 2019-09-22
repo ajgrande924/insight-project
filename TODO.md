@@ -84,3 +84,4 @@
 #### chaos
 
   - [ ] setup monitoring on kube cluster, with prometheus/grafana, using helm charts
+  - [ ] use stable/prometheus-operator instead of stable/prometheus and stable/grafana
