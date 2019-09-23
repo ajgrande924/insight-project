@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# bail out if anything fails
+set -e
+
+init () {
+  MEMORY=$1
+  if [ "$1" == "" ]; then
+    MEMORY=4096
+  fi
+  # start minikube
+  minikube start --kubernetes-version=v1.13.4\
+  --memory=$MEMORY\
+  --bootstrapper=kubeadm\
+  --extra-config=scheduler.address=0.0.0.0\
+  --extra-config=controller-manager.address=0.0.0.0
+}
+
+helm_init () {
+  echo ">>> helm_init starting..."
+  # initialize helm / tiller
+  helm init
+  kubectl create serviceaccount --namespace kube-system tiller
+  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+  echo ">>> helm_init complete"
+}
+
+wip_setup_monitoring () {
+  kubectl create namespace monitoring
+  helm install stable/prometheus-operator\
+  --name my-monit\
+  --namespace monitoring\
+  --values=kubernetes/minikube/prom-operator.yaml
+}
+
+wip_cleanup_monitoring () {
+  kubectl delete namespace monitoring
+  helm del --purge my-monit
+  kubectl delete crd prometheusrules.monitoring.coreos.com
+  kubectl delete crd servicemonitors.monitoring.coreos.com
+  kubectl delete crd alertmanagers.monitoring.coreos.com
+  kubectl delete crd prometheuses.monitoring.coreos.com
+  kubectl delete crd podmonitors.monitoring.coreos.com
+}
+
+start_chaos () {
+  kubectl create namespace chaos
+  kubectl apply -f kubernetes/chaos/km-configmap.yaml
+  kubectl apply -f kubernetes/chaos/km-deployment.yaml
+  kubectl apply -f kubernetes/chaos/km-nginx-deployment.yaml
+}
+
+cleanup_chaos () {
+  kubectl delete -f kubernetes/chaos/km-nginx-deployment.yaml
+  kubectl delete -f kubernetes/chaos/km-deployment.yaml
+  kubectl delete -f kubernetes/chaos/km-configmap.yaml
+  kubectl delete namespace chaos
+}
+
+destroy () {
+  # stop minikube
+  minikube stop
+  minikube delete
+  rm -rf ~/.minikube
+}
+
+"$@"

@@ -17,9 +17,9 @@ To start the application, you can run the following steps:
 
 | Step | Command | Description |
 | :---: | :---- | :---- |
-| 1 | `./helpers setup_eks` | setup vpc + eks cluster |
-| 2 | `./helpers helm_init` | instantiate helm + tiller |
-| 3 | `./helpers setup_monitoring` | setup monitoring |
+| 1 | `./run_kube setup_eks` | setup vpc + eks cluster |
+| 2 | `./run_kube helm_init` | instantiate helm + tiller |
+| 3 | `./run_kube setup_monitoring` | setup monitoring |
 
 ```
 # get grafana admin pw
@@ -39,7 +39,7 @@ To bring down the application you can run the following steps:
 
 | Step | Command | Description |
 | :---: | :---- | :---- |
-| 1 | `./helpers cleanup_monitoring` | cleanup monitoring |
-| 2 | `./helpers cleanup_tiller` | cleanup tiller |
-| 3 | `./helpers teardown` | destroy eks cluster + vpc |
+| 1 | `./run_kube cleanup_monitoring` | cleanup monitoring |
+| 2 | `./run_kube cleanup_tiller` | cleanup tiller |
+| 3 | `./run_kube teardown` | destroy eks cluster + vpc |
 

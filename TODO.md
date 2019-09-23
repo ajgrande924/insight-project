@@ -2,9 +2,9 @@
 
 #### containerize
 
-  9-16-19
+**9-16-19**
   
-  - [x] containerize simple flask app
+  - [x] **CONT**: containerize simple flask app
   
   ```sh
   cd app/simple-flask
@@ -13,9 +13,14 @@
   docker push ajgrande924/simple-flask
   ```
 
-  9-18-19
+**9-17-19**
 
-  - [x] containerize puzzle flask app
+  - [x] **KUBE**: bring up kube cluster through aws eks
+  - [x] **KUBE**: bring up monitoring tools (prometheus/grafana) on kuberneters cluster using helm
+
+**9-18-19**
+
+  - [x] **CONT**: containerize puzzle flask app
 
   ```sh
   # build
@@ -28,21 +33,8 @@
   dex <container> sh
   python -c  'import database; database.init_db()'
   ```
-  
-  9-20-19
 
-  - [ ] containerize flask application
-
-#### orchestration
-
-9-17-19
-
-  - [x] bring up kube cluster through aws eks
-  - [x] bring up monitoring tools (prometheus/grafana) on kuberneters cluster using helm
-
-9-18-19
-
-  - [x] nginx deployment available outside of kube cluster: `<hash>.us-west-2.elb.amazonaws.com`
+  - [x] **KUBE**: nginx deployment available outside of kube cluster: `<hash>.us-west-2.elb.amazonaws.com`
 
   You can do this two ways:
 
@@ -67,10 +59,12 @@
   kubectl delete deployment nginx-app
   ```
 
-  - [x] bring up simple flask application (stateless) on kube cluster
-  - [x] bring up simple postgres db (stateful) on kube cluster
-  - [x] communication between flask and postgres db
-  - [x] flask application accessible outside of kube cluster
+**9-19-19**
+  
+  - [x] **KUBE**: bring up simple flask application (stateless) on kube cluster
+  - [x] **KUBE**: bring up simple postgres db (stateful) on kube cluster
+  - [x] **KUBE**: communication between flask and postgres db
+  - [x] **KUBE**: flask application accessible outside of kube cluster
 
   ```sh
   # handles all  4 list items above
@@ -81,18 +75,18 @@
   kubectl delete --recursive -f kubernetes/puzzle-app # krmf
   ```
 
-#### chaos
+**9-22-19**
 
-  - [ ] setup monitoring on kube cluster, with prometheus/grafana, using helm charts
-  - [ ] use stable/prometheus-operator instead of stable/prometheus and stable/grafana
+  - [x] **CHAOS**: run simple kube-monkey example on minikube
 
-  9-22-19
-
-  - [x] run simple kube-monkey example on minikube
   ```sh
   # minikube w/ kube monkey
-  ./run_minikube start_mk
+  ./run_minikube init
   ./run_minikube start_chaos
   ./run_minikube cleanup_chaos
-  ./run_minikube cleanup_mk
+  ./run_minikube destroy
   ```
+
+**9-23-19**
+
+  - [ ] **MONIT**: use prometheus-operator to monitor on eks cluster
