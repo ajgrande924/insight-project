@@ -89,4 +89,6 @@
 
 **9-23-19**
 
-  - [ ] **MONIT**: use prometheus-operator to monitor on eks cluster
+  - [ ] **KUBE**: use prometheus-operator to monitor on eks cluster
+  - [ ] **MONIT**: ability to pull metrics from sample app to prometheus/grafana
+  - [ ] **CONT**: finish containerizing scale app
