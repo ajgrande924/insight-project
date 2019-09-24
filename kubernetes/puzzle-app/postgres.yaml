@@ -1,42 +1,66 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-configmap
+  namespace: chaos
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: flaskapp_db
+  POSTGRES_USER: docker_pg
+  POSTGRES_PASSWORD: helloworld
+  APP_SECRET_KEY: super_duper_secret
+---
+apiVersion: v1
+kind: Service
 metadata:
   name: postgres
+  namespace: chaos
+  labels:
+    app: postgres
 spec:
+  ports:
+  - port: 5432
+    name: postgres
+  clusterIP: None
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-set
+  namespace: chaos
+spec:
+  serviceName: "postgres"
+  replicas: 2
   selector:
     matchLabels:
       app: postgres
-  replicas: 1
   template:
     metadata:
       labels:
         app: postgres
     spec:
       containers:
-        - name: postgres
-          image: postgres:11-alpine
-          imagePullPolicy: "IfNotPresent"
-          ports:
-            - containerPort: 5432
-          env:
-          - name: POSTGRES_USER
-            value: "docker_pg"
-          - name: POSTGRES_PASSWORD
-            value: "helloworld"
-          - name: POSTGRES_DB
-            value: "flaskapp_db"
-          - name: APP_SECRET_KEY
-            value: "super_duper_secret"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  type: NodePort
-  ports:
-   - port: 5432
-  selector:
-   app: postgres
+      - name: postgres
+        image: postgres:11-alpine
+        envFrom:
+          - configMapRef:
+              name: postgres-configmap
+        ports:
+        - containerPort: 5432
+          name: postgredb
+        volumeMounts:
+        - name: postgredb
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: gp2
+      resources:
+        requests:
+          storage: 3Gi

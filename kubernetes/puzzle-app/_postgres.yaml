@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-deployment
+  name: postgres
 spec:
   selector:
     matchLabels:
-      app: flask-app
+      app: postgres
   replicas: 3
   template:
     metadata:
       labels:
-        app: flask-app
+        app: postgres
     spec:
       containers:
-      - name: flask
-        image: ajgrande924/puzzle-flask:latest
-        ports:
-        - containerPort: 8080
-        env:
+        - name: postgres
+          image: postgres:11-alpine
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
           - name: POSTGRES_USER
             value: "docker_pg"
           - name: POSTGRES_PASSWORD
@@ -30,13 +31,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: postgres
   labels:
-    app: flask-app
-  name: flask-svc
+    app: postgres
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-    - port: 8080
-      targetPort: 8080
+   - port: 5432
   selector:
-    app: flask-app
+   app: postgres

@@ -34,6 +34,7 @@ helm_init () {
   kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
   echo ">>> helm_init complete"
 }
+
 setup_monitoring () {
   echo ">>> setup_monitoring starting..."
 
@@ -93,10 +94,10 @@ teardown () {
 }
 
 debug () {
-  if [ $1 == "delete_monitoring"]; then
+  if [ "$1" == "delete_monitoring" ]; then
     # delete prom-operator
     helm del --purge prom-monitor
-  elif [ $1 == "reinstall_monitoring" ]; then
+  elif [ "$1" == "reinstall_monitoring" ]; then
     # reinstall prom-operator
     helm install stable/prometheus-operator\
     --name prom-monitor\

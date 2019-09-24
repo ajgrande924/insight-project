@@ -1,0 +1,122 @@
+global:
+  postgresql: {}
+image:
+  registry: docker.io
+  repository: bitnami/postgresql
+  tag: 11.5.0-debian-9-r34
+  pullPolicy: IfNotPresent
+  debug: false
+volumePermissions:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: stretch
+    pullPolicy: Always
+  securityContext:
+    runAsUser: 0
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+serviceAccount:
+  enabled: false
+replication:
+  enabled: true
+  user: repl_user
+  password: repl_password
+  slaveReplicas: 2
+  synchronousCommit: "on"
+  numSynchronousReplicas: 1
+  applicationName: my_application
+postgresqlUsername: postgres
+postgresqlDataDir: /bitnami/postgresql/data
+service:
+  type: ClusterIP
+  port: 5432
+  annotations: {}
+persistence:
+  enabled: true
+  mountPath: /bitnami/postgresql
+  subPath: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+  annotations: {}
+updateStrategy:
+  type: RollingUpdate
+master:
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  podLabels: {}
+  podAnnotations: {}
+  extraVolumeMounts: []
+  extraVolumes: []
+slave:
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  podLabels: {}
+  podAnnotations: {}
+  extraVolumeMounts: []
+  extraVolumes: []
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m
+networkPolicy:
+  enabled: false
+  allowExternal: true
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+metrics:
+  enabled: true
+  resources: {}
+  service:
+    type: ClusterIP
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9187"
+    loadBalancerIP:
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
+    namespace: monitoring
+    interval: 30s
+    scrapeTimeout: 10s
+  image:
+    registry: docker.io
+    repository: bitnami/postgres-exporter
+    tag: 0.5.1-debian-9-r48
+    pullPolicy: IfNotPresent
+  securityContext:
+    enabled: false
+    runAsUser: 1001
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+extraEnv: {}
