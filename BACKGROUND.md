@@ -43,3 +43,10 @@ hypothesis:
   - brief unavailability of data for a x duration of time
   - replica should get promoted (slave to master)
   - new clone should kick off and system recovers
+
+**engineering challenges**
+
+Deployment of kubernetes cluster
+
+  - aws eks vs. kops
+  - how much is handled by terraform vs. kubectl / helm

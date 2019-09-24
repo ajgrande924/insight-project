@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# bail out if anything fails
+set -e
+
+# helm install --name <release> stable/<chart> --set prometheusOperator.createCustomResource=false -f <yaml>
+
+# helm upgrade -f <yaml> <release> stable/<chart>
+
+# kubectl port-forward -n monitoring deploy/prometheus-server 9090:9090
+
+# grafana on localhost:3000
+# kubectl port-forward <grafana_pod> -n monitoring 3000:3000
+
+# get grafana admin pw
+# default grafana creds: admin:prom-operator
+# kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+# In grafana dashboard
+# - click '+' & select 'import' 
+# - 3131 for 'Kubernetes All Nodes' Dashboard
+# - 3146 for 'Kubernetes Pods' Dashboard
+# - select 'Prometheus' under data sources
+# - click 'import'
+
+old_setup_monitoring () {
+  echo ">>> setup_monitoring starting..."
+
+  kubectl create namespace monitoring
+
+  # install prometheus
+  helm install stable/prometheus \
+      --name prometheus \
+      --namespace monitoring \
+      --set alertmanager.persistentVolume.storageClass="gp2" \
+      --set server.persistentVolume.storageClass="gp2"
+
+  # install grafana
+  helm install stable/grafana \
+      --name grafana \
+      --namespace monitoring \
+      --set persistence.storageClassName="gp2" \
+      --set adminPassword="notadmin" \
+      --set datasources."datasources\.yaml".apiVersion=1 \
+      --set datasources."datasources\.yaml".datasources[0].name=Prometheus \
+      --set datasources."datasources\.yaml".datasources[0].type=prometheus \
+      --set datasources."datasources\.yaml".datasources[0].url=http://prometheus-server.prometheus.svc.cluster.local \
+      --set datasources."datasources\.yaml".datasources[0].access=proxy \
+      --set datasources."datasources\.yaml".datasources[0].isDefault=true \
+      --set service.type=LoadBalancer
+
+  # check prometheus namespace
+  kubectl get all -n monitoring
+
+  # debug
+  #kubectl port-forward -n prometheus deploy/prometheus-server 8080:9090
+
+  # get grafana elb url
+  export ELB=$(kubectl get svc -n grafana grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  echo "grafana_elb_url: http://$ELB"
+
+  echo ">>> setup_monitoring complete"
+}
+
+"$@"

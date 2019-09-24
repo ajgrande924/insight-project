@@ -34,51 +34,36 @@ helm_init () {
   kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
   echo ">>> helm_init complete"
 }
-
 setup_monitoring () {
   echo ">>> setup_monitoring starting..."
 
   kubectl create namespace monitoring
+  
+  # prometheus-operator: chart=v6.11.0, app=v0.32.0
+  helm install stable/prometheus-operator\
+  --name prom-monitor\
+  --namespace monitoring\
+  --set grafana.sidecar.dashboards.enabled=true\
+  --set grafana.sidecar.dashboards.label=grafana_dashboard
 
-  # install prometheus
-  helm install stable/prometheus \
-      --name prometheus \
-      --namespace monitoring \
-      --set alertmanager.persistentVolume.storageClass="gp2" \
-      --set server.persistentVolume.storageClass="gp2"
-
-  # install grafana
-  helm install stable/grafana \
-      --name grafana \
-      --namespace monitoring \
-      --set persistence.storageClassName="gp2" \
-      --set adminPassword="notadmin" \
-      --set datasources."datasources\.yaml".apiVersion=1 \
-      --set datasources."datasources\.yaml".datasources[0].name=Prometheus \
-      --set datasources."datasources\.yaml".datasources[0].type=prometheus \
-      --set datasources."datasources\.yaml".datasources[0].url=http://prometheus-server.prometheus.svc.cluster.local \
-      --set datasources."datasources\.yaml".datasources[0].access=proxy \
-      --set datasources."datasources\.yaml".datasources[0].isDefault=true \
-      --set service.type=LoadBalancer
-
-  # check prometheus namespace
-  kubectl get all -n monitoring
-
-  # debug
-  #kubectl port-forward -n prometheus deploy/prometheus-server 8080:9090
-
-  # get grafana elb url
-  export ELB=$(kubectl get svc -n grafana grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-  echo "grafana_elb_url: http://$ELB"
+  kubectl --namespace monitoring get pods -l "release=prom-monitor"
 
   echo ">>> setup_monitoring complete"
 }
 
+load_dashboards () {
+  kubectl create cm chaos-dashboard --from-file=kubernetes/prom-operator/chaos-dashboard.json -n monitoring
+  kubectl label cm chaos-dashboard grafana_dashboard=chaos-dashboard -n monitoring
+}
+
+delete_dashboards () {
+  kubectl delete cm chaos-dashboard -n monitoring
+}
+
 cleanup_monitoring () {
   echo ">>> cleanup_monitoring starting..."
-  # delete prometheus / grafana
-  helm del --purge grafana
-  helm del --purge prometheus
+  # delete prometheus operator
+  helm del --purge prom-monitor
   kubectl delete namespace monitoring
   echo ">>> cleanup_monitoring complete"
 }
@@ -105,6 +90,21 @@ teardown () {
   rm -rf ~/.kube/config
 
   echo ">>> teardown complete"
+}
+
+debug () {
+  if [ $1 == "delete_monitoring"]; then
+    # delete prom-operator
+    helm del --purge prom-monitor
+  elif [ $1 == "reinstall_monitoring" ]; then
+    # reinstall prom-operator
+    helm install stable/prometheus-operator\
+    --name prom-monitor\
+    --namespace monitoring\
+    --set prometheusOperator.createCustomResource=false\
+    --set grafana.sidecar.dashboards.enabled=true\
+    --set grafana.sidecar.dashboards.label=grafana_dashboard
+  fi
 }
 
 "$@"

@@ -26,24 +26,6 @@ helm_init () {
   echo ">>> helm_init complete"
 }
 
-wip_setup_monitoring () {
-  kubectl create namespace monitoring
-  helm install stable/prometheus-operator\
-  --name my-monit\
-  --namespace monitoring\
-  --values=kubernetes/minikube/prom-operator.yaml
-}
-
-wip_cleanup_monitoring () {
-  kubectl delete namespace monitoring
-  helm del --purge my-monit
-  kubectl delete crd prometheusrules.monitoring.coreos.com
-  kubectl delete crd servicemonitors.monitoring.coreos.com
-  kubectl delete crd alertmanagers.monitoring.coreos.com
-  kubectl delete crd prometheuses.monitoring.coreos.com
-  kubectl delete crd podmonitors.monitoring.coreos.com
-}
-
 start_chaos () {
   kubectl create namespace chaos
   kubectl apply -f kubernetes/chaos/km-configmap.yaml

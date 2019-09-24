@@ -89,6 +89,7 @@
 
 **9-23-19**
 
-  - [ ] **KUBE**: use prometheus-operator to monitor on eks cluster
+  - [x] **KUBE**: deploy prometheus-operator to monitor on eks cluster
+  - [x] **KUBE**: ability to load custom dashboard through yaml/json
   - [ ] **MONIT**: ability to pull metrics from sample app to prometheus/grafana
   - [ ] **CONT**: finish containerizing scale app
