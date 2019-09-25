@@ -32,4 +32,3 @@ To bring down the application you can run the following steps:
 | 2 | `./run_kube cleanup_monitoring` | cleanup monitoring |
 | 3 | `./run_kube cleanup_tiller` | cleanup tiller |
 | 4 | `./run_kube teardown` | destroy eks cluster + vpc |
-

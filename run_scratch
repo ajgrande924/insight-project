@@ -62,11 +62,15 @@ old_setup_monitoring () {
   echo ">>> setup_monitoring complete"
 }
 
-setup_postres () {
-  helm install stable/postgresql\ 
+setup_pg () {
+  helm install stable/postgresql\
   --name pg \
   --namespace chaos\
   -f ./kubernetes/postgres/values-prod.yaml
+}
+
+cleanup_pg () {
+  helm delete --purge pg
 }
 
 "$@"
