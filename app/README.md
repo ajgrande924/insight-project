@@ -1,4 +1,16 @@
 ## Setup Info
+
+### s3 + spark
+
+```sh
+# in app/
+wget http://hog.ee.columbia.edu/craffel/lmd/lmd_full.tar.gz
+tar -xvzf lmd_full.tar.gz
+aws s3 cp lmd_full s3://lmd-midi --recursive
+```
+
+### postgres
+
 This folder contains the scripts that were run to setup a few PostgreSQL tables. These tables are used in Flask app.
 
 The scripts were run in the order:

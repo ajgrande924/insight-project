@@ -12,15 +12,15 @@ import pretty_midi
 import os
 import sys
 import time
+import config
 
 s3_bucket = 'midi-files-sample2'  # 11258
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/lib")
-import config
 
 time_seq = []
 
-#Define Spark Configuration
+# Define Spark Configuration
 def spark_conf():
     conf = SparkConf().setAppName("processMIDIfiles")
     sc = SparkContext(conf=conf)
@@ -29,7 +29,7 @@ def spark_conf():
 
 spark = spark_conf()
 
-#Function to write spark-dataframe to PostgreSQL
+# Function to write spark-dataframe to PostgreSQL
 def write_df_to_pgsql(df, table_name):
     postgresql_user = os.environ.get('POSTGRESQL_USER')
     postgresql_password = os.environ.get('POSTGRESQL_PWD')
@@ -41,13 +41,15 @@ def write_df_to_pgsql(df, table_name):
         .option("password", postgresql_password) \
         .save()
 
-#Compute Similarity Score for song pairs
+# Compute Similarity Score for song pairs
 def process_df(df):
     time_seq.append(['start process-df', time.time()])
-    model = Pipeline(stages = [RegexTokenizer(pattern = " ", inputCol = "instruments", outputCol = "instruments_tokenized", minTokenLength = 1),
-                           NGram(n = 1, inputCol = "instruments_tokenized", outputCol = "instruments_ngrams"),
-                           HashingTF(inputCol = "instruments_ngrams", outputCol = "instruments_vectors"),
-                           MinHashLSH(inputCol = "instruments_vectors", outputCol = "instruments_lsh", numHashTables = 10)]).fit(df)
+    model = Pipeline(stages = [
+                                RegexTokenizer(pattern = " ", inputCol = "instruments", outputCol = "instruments_tokenized", minTokenLength = 1),
+                                NGram(n = 1, inputCol = "instruments_tokenized", outputCol = "instruments_ngrams"),
+                                HashingTF(inputCol = "instruments_ngrams", outputCol = "instruments_vectors"),
+                                MinHashLSH(inputCol = "instruments_vectors", outputCol = "instruments_lsh", numHashTables = 10)
+                              ]).fit(df)
 
     df_hashed = model.transform(df)
     df_matches = model.stages[-1].approxSimilarityJoin(df_hashed, df_hashed, 0.5, distCol="distance") \
@@ -60,7 +62,7 @@ def process_df(df):
     time_seq.append(['write pgsql', time.time()])
     print('time_seq', time_seq)
 
-#Read all MIDI files from S3 bucket
+# Read all MIDI files from S3 bucket
 def read_midi_files():
     time_seq.append(['start-read-midi', time.time()])
     invalid_files = []
@@ -68,7 +70,7 @@ def read_midi_files():
     number_of_valid_files = 0
     filename_instruments_seq = []
 
-    #Set s3-boto config
+    # Set s3-boto config
     s3 = boto3.resource('s3')
     boto_client = boto3.client('s3')
     bucket = s3.Bucket(s3_bucket)
