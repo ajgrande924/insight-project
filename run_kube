@@ -75,14 +75,14 @@ setup_dashboards () {
 }
 
 setup_scale_app () {
-  kubectl create namespace dev
   # setup postgres cluster
   helm install stable/postgresql\
   --name pg\
-  --namespace dev\
   -f ./helm/postgres/values-prod.yaml
   # setup scale app
   kubectl apply --recursive -f kubernetes/scale-app/scale.yaml
+  # setup spark-cluster
+  # kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
 }
 
 ############################
@@ -90,9 +90,9 @@ setup_scale_app () {
 ############################
 
 cleanup_scale_app () {
+  # kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
   kubectl delete --recursive -f kubernetes/scale-app/scale.yaml
   helm delete --purge pg
-  kubectl delete namespace dev
 }
 
 cleanup_dashboards () {

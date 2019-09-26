@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scale-app
-  namespace: dev
 spec:
   selector:
     matchLabels:
@@ -28,7 +27,6 @@ metadata:
   labels:
     app: scale-app
   name: scale-app-svc
-  namespace: dev
 spec:
   type: LoadBalancer
   ports:
