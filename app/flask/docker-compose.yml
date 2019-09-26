@@ -1,19 +1,17 @@
 version: '3'
 services:
-  db:
+  postgres:
     image: postgres:11-alpine
-    container_name: db
+    container_name: pg
     volumes:
       - "dbdata:/var/lib/postgresql/data"
   flask:
     build: .
-    image: ajgrande924/scale
+    image: ajgrande924/scale-app
     container_name: scale
     ports: 
       - 80:80
-    volumes:
-      - .:/app
     depends_on:
-      - db
+      - postgres
 volumes:
   dbdata:

@@ -116,17 +116,17 @@ module "eks" {
   worker_groups = [
     {
       name                          = "worker-group-1"
-      instance_type                 = "t2.medium"
+      instance_type                 = "m4.large"
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = 2
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     },
     {
       name                          = "worker-group-2"
-      instance_type                 = "t2.medium"
+      instance_type                 = "m4.large"
       additional_userdata           = "echo foo bar"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-      asg_desired_capacity          = 2
+      asg_desired_capacity          = 1
     },
   ]
 

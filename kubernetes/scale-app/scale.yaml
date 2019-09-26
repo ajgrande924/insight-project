@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-app
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: scale-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: scale-app
+    spec:
+      containers:
+      - name: scale-app
+        image: ajgrande924/scale-app:latest
+        ports:
+        - containerPort: 80
+        env:
+          - name: HELLO
+            value: "HELLO"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: scale-app
+  name: scale-app-svc
+  namespace: dev
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: scale-app

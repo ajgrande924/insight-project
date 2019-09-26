@@ -3,25 +3,46 @@
 # bail out if anything fails
 set -e
 
+#####################
+##  PRE APP STEPS  ##
+#####################
+
+containerize () {
+  DOCKER_USER=ajgrande924
+  docker login
+  cd app/flask
+  docker build -t ${DOCKER_USER}/scale-app .
+  docker push ${DOCKER_USER}/scale-app
+}
+
+gen_pg_assets () {
+  # generate hash_names.csv w/ md5_to_paths.json as intermediate
+  cd app/postgres
+  curl http://hog.ee.columbia.edu/craffel/lmd/md5_to_paths.json > md5_to_paths.json
+  rm -rf assets/hash_names.csv
+  python3 create_midi_instrument_csv.py
+  rm -rf md5_to_paths.json
+}
+
+#########################
+##  START APPLICATION  ##
+#########################
+
 setup_eks () {
   echo ">>> setup_eks starting..."
-
   echo ">>> provisioning infra with terraform..."
   cd terraform
   terraform init -input=false
   terraform apply -input=false -auto-approve
-
   echo ">>> configure kubectl for eks..."
   TF_OUTPUT=$(terraform output -json)
   CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
   aws eks update-kubeconfig --name ${CLUSTER_NAME}
-
   echo ">>> checking kubectl..."
   kubectl version
   kubectl get nodes
   kubectl config current-context
   kubectl config view
-
   echo ">>> setup_eks complete"
 }
 
@@ -37,27 +58,44 @@ helm_init () {
 
 setup_monitoring () {
   echo ">>> setup_monitoring starting..."
-
   kubectl create namespace monitoring
-  
   # prometheus-operator: chart=v6.11.0, app=v0.32.0
   helm install stable/prometheus-operator\
   --name prom-monitor\
   --namespace monitoring\
   --set grafana.sidecar.dashboards.enabled=true\
   --set grafana.sidecar.dashboards.label=grafana_dashboard
-
   kubectl --namespace monitoring get pods -l "release=prom-monitor"
-
   echo ">>> setup_monitoring complete"
 }
 
-load_dashboards () {
+setup_dashboards () {
   kubectl create cm chaos-dashboard --from-file=kubernetes/prom-operator/chaos-dashboard.json -n monitoring
   kubectl label cm chaos-dashboard grafana_dashboard=chaos-dashboard -n monitoring
 }
 
-delete_dashboards () {
+setup_scale_app () {
+  kubectl create namespace dev
+  # setup postgres cluster
+  helm install stable/postgresql\
+  --name pg\
+  --namespace dev\
+  -f ./helm/postgres/values-prod.yaml
+  # setup scale app
+  kubectl apply --recursive -f kubernetes/scale-app/scale.yaml
+}
+
+############################
+##  TEARDOWN APPLICATION  ##
+############################
+
+cleanup_scale_app () {
+  kubectl delete --recursive -f kubernetes/scale-app/scale.yaml
+  helm delete --purge pg
+  kubectl delete namespace dev
+}
+
+cleanup_dashboards () {
   kubectl delete cm chaos-dashboard -n monitoring
 }
 
@@ -81,17 +119,18 @@ cleanup_tiller () {
 
 teardown () {
   echo ">>> teardown starting..."
-
   echo ">>> destroying infra with terraform..."
   cd terraform
   terraform destroy -auto-approve
-
   echo ">>> cleanup..."
   rm -rf .terraform terraform.tfstate*
   rm -rf ~/.kube/config
-
   echo ">>> teardown complete"
 }
+
+#############
+##  DEBUG  ##
+#############
 
 debug () {
   if [ "$1" == "delete_monitoring" ]; then

@@ -14,7 +14,7 @@ import sys
 import time
 import config
 
-s3_bucket = 'midi-files-sample2'  # 11258
+s3_bucket = 'lmd-midi'
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/lib")
 
@@ -65,6 +65,7 @@ def process_df(df):
 # Read all MIDI files from S3 bucket
 def read_midi_files():
     time_seq.append(['start-read-midi', time.time()])
+    
     invalid_files = []
     number_of_files = 0
     number_of_valid_files = 0
@@ -78,14 +79,17 @@ def read_midi_files():
     # DataFrame schema
     File_Instruments = Row("filename", "instruments")
     Filename_Instrument = Row("filename", "instrument")
-    # stores (filename, list(instrument))
+    
+    # Stores (filename, list(instrument))
     filename_instruments_seq = []
-    # stores (filename, instrument) This is denormalized format of above. A filename will have an entry for each instrument.
+    
+    # Stores (filename, instrument) This is denormalized format of above. 
+    # A filename will have an entry for each instrument.
     filename_instrument_seq = []
 
     # Read each MIDI file from AWS S3 bucket
     for obj in bucket.objects.all():
-        number_of_files+=1
+        number_of_files += 1
         s3_key = obj.key
         midi_obj_stream = boto_client.get_object(Bucket=s3_bucket, Key=s3_key)
         midi_obj = BytesIO(midi_obj_stream['Body'].read())
@@ -100,7 +104,7 @@ def read_midi_files():
             for instrument in instruments_list_uniq:
                 filename_instrument_seq.append(Filename_Instrument(filename, instrument))
             instruments_str = " ".join(instruments_list_uniq)
-            if(len(instruments_list_uniq) >=3):
+            if (len(instruments_list_uniq) >=3):
                 filename_instruments_seq.append(File_Instruments(filename,instruments_str))
         except:
             # Invalid MIDI files are stored.
