@@ -62,4 +62,12 @@ old_setup_monitoring () {
   echo ">>> setup_monitoring complete"
 }
 
+containerize () {
+  DOCKER_USER=ajgrande924
+  # docker login
+  cd app/spark/master
+  docker build -t ${DOCKER_USER}/spark-master .
+  # docker push ${DOCKER_USER}/spark-master
+}
+
 "$@"

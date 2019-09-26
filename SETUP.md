@@ -39,7 +39,7 @@ To bring down the application you can run the following steps:
 | Step | Command | Description |
 | :---: | :---- | :---- |
 | 1 | `./run_kube cleanup_scale_app` | cleanup scale data pipeline |
-| 1 | `./run_kube cleanup_dashboards` | delete custom grafana dashboards |
-| 2 | `./run_kube cleanup_monitoring` | cleanup monitoring |
-| 3 | `./run_kube cleanup_tiller` | cleanup tiller |
-| 4 | `./run_kube teardown` | destroy eks cluster + vpc |
+| 2 | `./run_kube cleanup_dashboards` | delete custom grafana dashboards |
+| 3 | `./run_kube cleanup_monitoring` | cleanup monitoring |
+| 4 | `./run_kube cleanup_tiller` | cleanup tiller |
+| 5 | `./run_kube teardown` | destroy eks cluster + vpc |
