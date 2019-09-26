@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spark-pi
+  namespace: spark-pi
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: spark-pi-role
+  namespace: spark-pi
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: spark-pi-role-binding
+  namespace: spark-pi
+subjects:
+- kind: ServiceAccount
+  name: spark-pi
+  namespace: spark-pi
+roleRef:
+  kind: Role
+  name: spark-pi-role
+  apiGroup: rbac.authorization.k8s.io

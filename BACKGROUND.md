@@ -46,7 +46,7 @@ hypothesis:
 
 **engineering challenges**
 
-Deployment of kubernetes cluster
-
-  - aws eks vs. kops
-  - how much is handled by terraform vs. kubectl / helm
+  - deployment of kubernetes cluster
+    - aws eks vs. kops
+    - how much is handled by terraform vs. kubectl / helm
+  - submitting spark jobs on kubernetes cluster

@@ -70,4 +70,47 @@ containerize () {
   # docker push ${DOCKER_USER}/spark-master
 }
 
+test_jump_pod () {
+  kubectl create namespace spark-pi
+  kubectl apply -f kubernetes/spark-exp/spark-role.yaml
+  kubectl auth can-i create pod --as=system:serviceaccount:spark-pi:spark-pi -n spark-pi
+
+  # jump pod
+  kubectl run --generator=run-pod/v1 jump-pod --rm -i --tty --serviceaccount=spark-pi --namespace=spark-pi --image vitamingaugau/spark:spark-2.4.4 sh
+
+  # inside jump pod
+  export SA=spark-pi
+  export NAMESPACE=spark-pi
+  export TOKEN=/var/run/secrets/kubernetes.io/serviceaccount/token
+  export CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+  # scala jar example
+  /opt/spark/bin/spark-submit \
+    --master=k8s://https://2003D3175F75CB25EE1389647B0467C6.gr7.us-west-2.eks.amazonaws.com:443 \
+    --deploy-mode cluster \
+    --name spark-pi \
+    --class org.apache.spark.examples.SparkPi \
+    --conf spark.kubernetes.driver.pod.name=spark-pi-driver  \
+    --conf spark.kubernetes.container.image=vitamingaugau/spark:spark-2.4.4 \
+    --conf spark.kubernetes.namespace=$NAMESPACE \
+    --conf spark.kubernetes.authenticate.driver.serviceAccountName=$SA \
+    --conf spark.kubernetes.authenticate.submission.caCertFile=$CACERT \
+    --conf spark.kubernetes.authenticate.submission.oauthTokenFile=$TOKEN \
+    --conf spark.executor.instances=2 \
+    local:///opt/spark/examples/target/scala-2.11/jars/spark-examples_2.11-2.4.4.jar 20000
+}
+
+build_spark () {
+  docker container run \
+    --privileged -it \
+    --name spark-build \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${PWD}/app/spark:/tmp \
+    -e USER=${SECRET_USER} \
+    -e PASSWORD=${SECRET_PW} \
+    -w /opt \
+    docker:dind \
+    sh /tmp/build.sh
+}
+
 "$@"
