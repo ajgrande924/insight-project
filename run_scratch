@@ -120,7 +120,10 @@ build_spark () {
 wip_submit_spark_job () {
 
   # startup spark client pod
-  kubectl run --generator=run-pod/v1 spark-client --labels="app=spark-client" --rm -it --image ajgrande924/spark-base:latest sh
+  kubectl run \
+  --generator=run-pod/v1 spark-client \
+  --labels="app=spark-client" \
+  --rm -it --image ajgrande924/spark-base:latest sh
 
   # copy over pi.py
 

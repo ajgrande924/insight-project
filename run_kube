@@ -28,10 +28,17 @@ create_from_spark_base () {
 
 push_to_docker_hub () {
   docker login
-  docker push ${DOCKER_USER}/scale-app
+  # docker push ${DOCKER_USER}/scale-app
   docker push ${DOCKER_USER}/spark-base
   docker push ${DOCKER_USER}/spark-master
   docker push ${DOCKER_USER}/spark-worker
+}
+
+cleanup_images () {
+  docker rmi ${DOCKER_USER}/scale-app
+  docker rmi ${DOCKER_USER}/spark-base
+  docker rmi ${DOCKER_USER}/spark-master
+  docker rmi ${DOCKER_USER}/spark-worker
 }
 
 gen_pg_assets () {
@@ -98,10 +105,8 @@ setup_scale_app () {
   helm install stable/postgresql\
   --name pg\
   -f ./helm/postgres/values-prod.yaml
-  # setup scale app
-  kubectl apply --recursive -f kubernetes/scale-app/scale.yaml
-  # setup spark-cluster
-  kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
+  # setup scale app, secrets, spark cluster
+  kubectl apply --recursive -f kubernetes/scale-app
 }
 
 ############################
@@ -109,8 +114,7 @@ setup_scale_app () {
 ############################
 
 cleanup_scale_app () {
-  kubectl delete --recursive -f kubernetes/scale-app/spark-cluster.yaml
-  kubectl delete --recursive -f kubernetes/scale-app/scale.yaml
+  kubectl delete --recursive -f kubernetes/scale-app
   helm delete --purge pg
 }
 
