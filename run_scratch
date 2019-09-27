@@ -107,10 +107,21 @@ build_spark () {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/app/spark:/tmp \
     -e USER=${SECRET_USER} \
-    -e PASSWORD=${SECRET_PW} \
     -w /opt \
     docker:dind \
     sh /tmp/build.sh
 }
+
+# kubectl run spark-base \
+# --rm -it --labels="app=spark-client" \
+# --image bde2020/spark-base:2.4.3-hadoop2.7 \
+# -- bash ./spark/bin/spark-submit --class CLASS_TO_RUN --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client URL_TO_YOUR_APP
+
+kubectl run --generator=run-pod/v1 spark-base --labels="app=spark-client" --rm -it --image bde2020/spark-base:2.4.3-hadoop2.7 sh
+
+/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client run.py
+
+kubectl port-forward spark-master-b7f7577df-w9j7v 8080:8080
+spark-master-b7f7577df-w9j7v
 
 "$@"

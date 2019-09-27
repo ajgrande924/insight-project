@@ -6,6 +6,7 @@ The application requires the following dependencies:
 
   - `jq`
   - `awscli`
+  - `docker`
   - `kubetcl`
   - `helm`
   - `aws-iam-authenticator`
@@ -17,8 +18,11 @@ Before starting the application, you must do these steps:
 
 | Step | Command | Description |
 | :---: | :---- | :---- |
-| 1 | `./run_kube containerize` | containerize flask app + deploy to docker hub |
-| 2 | `./run_kube gen_pg_assets` | generate hash_names.csv w/ md5_to_paths.json as intermediate |
+| 1 | `./run_kube create_scale_app` | containerize flask app |
+| 2 | `./run_kube create_spark_base` | create spark base image |
+| 3 | `./run_kube create_from_spark_base` | create spark master and worker images from base |
+| 4 | `./run_kube push_to_docker_hub` | push images to docker hub |
+| 5 | `./run_kube gen_pg_assets` | generate hash_names.csv w/ md5_to_paths.json as intermediate |
 
 **start application**
 

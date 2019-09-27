@@ -7,12 +7,31 @@ set -e
 ##  PRE APP STEPS  ##
 #####################
 
-containerize () {
-  DOCKER_USER=ajgrande924
-  docker login
+DOCKER_USER=ajgrande924
+
+create_scale_app () {
   cd app/flask
   docker build -t ${DOCKER_USER}/scale-app .
+}
+
+create_spark_base () {
+  cd app/spark/spark-base
+  docker build -t ${DOCKER_USER}/spark-base .
+}
+
+create_from_spark_base () {
+  cd app/spark/spark-master
+  docker build -t ${DOCKER_USER}/spark-master .
+  cd ../spark-worker
+  docker build -t ${DOCKER_USER}/spark-worker .
+}
+
+push_to_docker_hub () {
+  docker login
   docker push ${DOCKER_USER}/scale-app
+  docker push ${DOCKER_USER}/spark-base
+  docker push ${DOCKER_USER}/spark-master
+  docker push ${DOCKER_USER}/spark-worker
 }
 
 gen_pg_assets () {
