@@ -101,7 +101,7 @@ setup_scale_app () {
   # setup scale app
   kubectl apply --recursive -f kubernetes/scale-app/scale.yaml
   # setup spark-cluster
-  # kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
+  kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
 }
 
 ############################
@@ -109,7 +109,7 @@ setup_scale_app () {
 ############################
 
 cleanup_scale_app () {
-  # kubectl apply --recursive -f kubernetes/scale-app/spark-cluster.yaml
+  kubectl delete --recursive -f kubernetes/scale-app/spark-cluster.yaml
   kubectl delete --recursive -f kubernetes/scale-app/scale.yaml
   helm delete --purge pg
 }
