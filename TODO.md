@@ -93,3 +93,9 @@
   - [x] **KUBE**: ability to load custom dashboard through yaml/json
   - [ ] **MONIT**: ability to pull metrics from sample app to prometheus/grafana
   - [ ] **CONT**: finish containerizing scale app
+
+**9-24-19**
+
+**9-25-19**
+
+**9-26-19**

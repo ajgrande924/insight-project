@@ -117,11 +117,19 @@ build_spark () {
 # --image bde2020/spark-base:2.4.3-hadoop2.7 \
 # -- bash ./spark/bin/spark-submit --class CLASS_TO_RUN --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client URL_TO_YOUR_APP
 
-kubectl run --generator=run-pod/v1 spark-base --labels="app=spark-client" --rm -it --image bde2020/spark-base:2.4.3-hadoop2.7 sh
+wip_submit_spark_job () {
 
-/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client run.py
+  # startup spark client pod
+  kubectl run --generator=run-pod/v1 spark-client --labels="app=spark-client" --rm -it --image ajgrande924/spark-base:latest sh
 
-kubectl port-forward spark-master-b7f7577df-w9j7v 8080:8080
-spark-master-b7f7577df-w9j7v
+  # copy over pi.py
+
+  # inside pod
+  /spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client pi.py 2
+
+  # check spark master ui
+  kubectl port-forward <spark_master_pod> 8080:8080
+
+}
 
 "$@"
