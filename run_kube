@@ -24,6 +24,8 @@ create_from_spark_base () {
   docker build -t ${DOCKER_USER}/spark-master .
   cd ../spark-worker
   docker build -t ${DOCKER_USER}/spark-worker .
+  cd ../spark-client
+  docker build -t ${DOCKER_USER}/spark-client .
 }
 
 push_to_docker_hub () {
@@ -32,6 +34,7 @@ push_to_docker_hub () {
   docker push ${DOCKER_USER}/spark-base
   docker push ${DOCKER_USER}/spark-master
   docker push ${DOCKER_USER}/spark-worker
+  docker push ${DOCKER_USER}/spark-client
 }
 
 cleanup_images () {
@@ -39,6 +42,7 @@ cleanup_images () {
   docker rmi ${DOCKER_USER}/spark-base
   docker rmi ${DOCKER_USER}/spark-master
   docker rmi ${DOCKER_USER}/spark-worker
+  docker rmi ${DOCKER_USER}/spark-client
 }
 
 gen_pg_assets () {

@@ -22,7 +22,7 @@ time_seq = []
 
 # Define Spark Configuration
 def spark_conf():
-    conf = SparkConf().setAppName("processMIDIfiles")
+    conf = SparkConf().setAppName("process_midi_files")
     sc = SparkContext(conf=conf)
     spark = SparkSession.builder.getOrCreate()
     return spark
@@ -31,8 +31,8 @@ spark = spark_conf()
 
 # Function to write spark-dataframe to PostgreSQL
 def write_df_to_pgsql(df, table_name):
-    postgresql_user = os.environ.get('POSTGRESQL_USER')
-    postgresql_password = os.environ.get('POSTGRESQL_PWD')
+    postgresql_user = os.environ.get('POSTGRES_USER')
+    postgresql_password = os.environ.get('POSTGRES_PASSWORD')
     df.write \
         .format("jdbc") \
         .option("url", "jdbc:postgresql://postgres/lmd") \

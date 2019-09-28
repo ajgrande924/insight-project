@@ -117,6 +117,18 @@ build_spark () {
 # --image bde2020/spark-base:2.4.3-hadoop2.7 \
 # -- bash ./spark/bin/spark-submit --class CLASS_TO_RUN --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client URL_TO_YOUR_APP
 
+wip () {
+  kubectl create namespace dev
+  kubectl apply -f kubernetes/scale-app/scale-secret.yaml
+  kubectl apply -f kubernetes/scale-app/scale-postgres.yaml
+  kubectl apply -f kubernetes/scale-app/scale-spark.yaml
+
+  kubectl delete -f kubernetes/scale-app/scale-spark.yaml
+  kubectl delete -f kubernetes/scale-app/scale-postgres.yaml
+  kubectl delete -f kubernetes/scale-app/scale-secret.yaml
+  kubectl create namespace dev
+}
+
 wip_submit_spark_job () {
 
   # startup spark client pod
@@ -125,10 +137,21 @@ wip_submit_spark_job () {
   --labels="app=spark-client" \
   --rm -it --image ajgrande924/spark-base:latest sh
 
-  # copy over pi.py
-
   # inside pod
-  /spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client pi.py 2
+
+  python3 /examples/python/test_boto3.py
+
+  # submit sample app - test_pi.py
+  /spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/test_pi.py 2
+
+  # magic - works
+  export PYSPARK_PYTHON=python3
+  /spark/bin/spark-shell --packages org.postgresql:postgresql:42.1.1
+  /spark/bin/spark-submit --driver-class-path /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --conf spark.executor.extraClassPath=/root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --jars /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/main.py
+  
+  # graveyard
+  /spark/bin/spark-submit --packages org.postgresql:postgresql:42.1.1 --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/main.py
+  /spark/bin/spark-submit --driver-class-path /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --master spark://spark-master:7077 /python/main.py 1000
 
   # check spark master ui
   kubectl port-forward <spark_master_pod> 8080:8080
