@@ -105,6 +105,6 @@
 **9-28-19**
 
   - [x] able to submit spark jobs to spark cluster on kubernetes and store in postgres
-  - [ ] 
-  - [ ] 
-  - [ ] 
+  - [ ] ...
+  - [ ] ...
+  - [ ] ...

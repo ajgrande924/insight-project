@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# bail out if anything fails
+set -e
+
+# source ...
+# need to add wait or delay
+# kubectl command to wait for changes to finish initializing?
+
+deploy () {
+  setup_eks
+  helm_init
+  setup_monitoring
+  setup_dashboards
+  setup_scale_app
+}
+
+destroy () {
+  cleanup_scale_app
+  cleanup_dashboards
+  cleanup_monitoring
+  cleanup_tiller
+  cleanup_eks
+}
+
+"$@"

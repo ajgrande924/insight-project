@@ -144,15 +144,15 @@ cleanup_tiller () {
   echo ">>> cleanup_tiller complete"
 }
 
-teardown () {
-  echo ">>> teardown starting..."
+cleanup_eks () {
+  echo ">>> cleanup_eks starting..."
   echo ">>> destroying infra with terraform..."
   cd terraform
   terraform destroy -auto-approve
   echo ">>> cleanup..."
   rm -rf .terraform terraform.tfstate*
   rm -rf ~/.kube/config
-  echo ">>> teardown complete"
+  echo ">>> cleanup_eks complete"
 }
 
 #############

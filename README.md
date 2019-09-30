@@ -4,26 +4,42 @@
 ## Table of Contents
 
   - [1.0 Introduction](README.md#introduction)
-  - [2.0 Data-Pipeline](README.md#data-pipeline)
+    - 1.1 Tech Stack
+  - [2.0 Data Pipeline](README.md#data-pipeline)
     - 2.1 Overview - Scale
-  - [3.0 Devops-Pipeline](README.md#devops-pipeline)
-  - [4.0 Engineering-Challenges](README.md#engineering-challenges)
+  - [3.0 DevOps Pipeline](README.md#devops-pipeline)
+    - 3.1 Containerize Data Pipeline
+    - 3.2 Deployment Architecture
+    - 3.3 Deployment of Data Pipeline
+  - [4.0 Engineering Challenges](README.md#engineering-challenges)
     - 4.1 Deployment of Kubernetes cluster
     - 4.2 Deployment of Spark on Kubernetes cluster
-  - [5.0 Future-Work](README.md#future-work)
+  - [5.0 Future Work](README.md#future-work)
   - [6.0 Development](README.md#development)
     - 6.1 Build and Deploy Data Pipeline
+  - [7.0 Miscellaneous]
+    - [7.1 Todo](TODO.md)
+    - [7.2 Notes](NOTES.md)
+    - [7.3 Permissions](PERMISSIONS.md)
 
 ## 1.0 Introduction
 
+### 1.1 Tech Stack
+
+  - Terraform
+  - Kubernetes (AWS EKS)
+  - Helm
+  - Prometheus / Grafana
+  - Data Pipeline: Spark, Postgres, Flask
+
 ## 2.0 Data Pipeline
 
-## 2.1 Overview - Scale
+### 2.1 Overview - Scale
 
 The existing batch data pipeline is called Scale. It is a music recommendation engine that finds similar songs based on shared instruments. The original application can be found [here](https://github.com/mothas/insight-music-project). The data pipeline is shown below:
 
 <p align="center"> 
-  <img src="./media/scale_data_pipeline.png" alt="scale_data_pipeline" width="800px"/>
+  <img src="./media/insight_scale_data_pipeline.png" alt="insight_scale_data_pipeline" width="800px"/>
 </p>
 
   - S3: storage of midi files
@@ -31,7 +47,17 @@ The existing batch data pipeline is called Scale. It is a music recommendation e
   - Postgres: store results
   - Flask: view results
 
-## 3.0 Devops Pipeline
+## 3.0 DevOps Pipeline
+
+### 3.1 Containerize Data Pipeline
+
+### 3.2 Deployment Architecture
+
+<p align="center"> 
+  <img src="./media/insight_scale_arch.png" alt="insight_scale_arch" width="800px"/>
+</p>
+
+### 3.3 Deployment of Data Pipeline
 
 ## 4.0 Engineering Challenges
 
@@ -52,12 +78,15 @@ Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experi
 
 ## 5.0 Future Work
 
-  - convert deployment of instances within Kubernetes cluster to terraform
-  - update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
+  - [ ] convert deployment of instances within Kubernetes cluster to terraform
+  - [ ] move from AWS EKS to KOPS for more flexibility
+  - [ ] update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
 
 ## 6.0 Development
 
 ### 6.1 Build and Deploy Data Pipeline
+
+I've seperated each piece of my build, deployment, and destroy steps into seperate subcommands for debugging purposes.
 
 To build and deploy the data pipeline, you will need the following dependencies:
 
@@ -97,4 +126,4 @@ To destroy the data pipeline, you can run the following steps:
 | 2 | `./run_kube cleanup_dashboards` | delete custom grafana dashboards |
 | 3 | `./run_kube cleanup_monitoring` | cleanup monitoring |
 | 4 | `./run_kube cleanup_tiller` | cleanup tiller |
-| 5 | `./run_kube teardown` | destroy eks cluster + vpc |
+| 5 | `./run_kube cleanup_eks` | destroy eks cluster + vpc |
