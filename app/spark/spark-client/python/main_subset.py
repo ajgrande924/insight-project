@@ -15,6 +15,10 @@ import time
 import config
 
 s3_bucket = 'lmd-midi'
+subset_count = 40
+df_filename_instrument_name = 'filename_instrument_run3'
+df_matches_name = 'filepair_similarity_run3'
+spark_app_name = 'process_midi_files'
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/lib")
 
@@ -22,7 +26,7 @@ time_seq = []
 
 # Define Spark Configuration
 def spark_conf():
-    conf = SparkConf().setAppName("process_midi_files")
+    conf = SparkConf().setAppName(spark_app_name)
     sc = SparkContext(conf=conf)
     spark = SparkSession.builder.getOrCreate()
     return spark
@@ -58,7 +62,7 @@ def process_df(df):
                 f.col('datasetB.filename').alias('filename_B'),
                 f.col('distance'))
     time_seq.append(['process-df df_matches', time.time()])
-    write_df_to_pgsql(df_matches, 'filepair_similarity_run3')
+    write_df_to_pgsql(df_matches, df_matches_name)
     time_seq.append(['write pgsql', time.time()])
     print('time_seq', time_seq)
 
@@ -89,9 +93,8 @@ def read_midi_files():
 
     # Read each MIDI file from AWS S3 bucket
     for obj in bucket.objects.all():
-        if (number_of_files >= 20):
+        if (number_of_files > subset_count):
             break
-        print("file", number_of_files)
         number_of_files += 1
         s3_key = obj.key
         midi_obj_stream = boto_client.get_object(Bucket=s3_bucket, Key=s3_key)
@@ -115,7 +118,7 @@ def read_midi_files():
     time_seq.append(['end read-file', time.time()])
     df_filename_instrument = spark.createDataFrame(filename_instrument_seq)
     print(df_filename_instrument)
-    write_df_to_pgsql(df_filename_instrument, 'filename_instrument_test')
+    write_df_to_pgsql(df_filename_instrument, df_filename_instrument_name)
     df_song_instrument = spark.createDataFrame(filename_instruments_seq)
     process_df(df_song_instrument)
 
