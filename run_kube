@@ -38,7 +38,7 @@ push_to_docker_hub () {
 }
 
 cleanup_images () {
-  docker rmi ${DOCKER_USER}/scale-app
+  # docker rmi ${DOCKER_USER}/scale-app
   docker rmi ${DOCKER_USER}/spark-base
   docker rmi ${DOCKER_USER}/spark-master
   docker rmi ${DOCKER_USER}/spark-worker

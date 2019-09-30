@@ -149,6 +149,15 @@ wip_submit_spark_job () {
   /spark/bin/spark-shell --packages org.postgresql:postgresql:42.1.1
   /spark/bin/spark-submit --driver-class-path /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --conf spark.executor.extraClassPath=/root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --jars /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/main.py
   
+  # revised to test
+  /spark/bin/spark-submit \
+  --driver-class-path /jars/org.postgresql_postgresql-42.1.1.jar \
+  --conf spark.executor.extraClassPath=/jars/org.postgresql_postgresql-42.1.1.jar \
+  --jars /jars/org.postgresql_postgresql-42.1.1.jar \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
+  --conf spark.driver.host=spark-client /examples/python/main.py
+
   # graveyard
   /spark/bin/spark-submit --packages org.postgresql:postgresql:42.1.1 --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/main.py
   /spark/bin/spark-submit --driver-class-path /root/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar --master spark://spark-master:7077 /python/main.py 1000

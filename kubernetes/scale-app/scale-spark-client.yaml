@@ -1,0 +1,52 @@
+apiVersion: apps/v1                                                                                                                                                                                                                         
+kind: Deployment                                                                                                                                                                                                                            
+metadata:                                                                                                                                                                                                                                   
+  name: spark-client                                                                                                                                                                                                                        
+  labels:                                                                                                                                                                                                                                   
+    app: spark-client                                                                                                                                                                                                                       
+spec:                                                                                                                                                                                                                                       
+  selector:                                                                                                                                                                                                                                 
+    matchLabels:                                                                                                                                                                                                                            
+      app: spark-client                                                                                                                                                                                                                     
+  template:                                                                                                                                                                                                                                 
+    metadata:                                                                                                                                                                                                                               
+      labels:                                                                                                                                                                                                                               
+        app: spark-client                                                                                                                                                                                                                   
+    spec:                                                                                                                                                                                                                                   
+      containers:                                                                                                                                                                                                                           
+      - name: spark-client                                                                                                                                                                                                                  
+        image: ajgrande924/spark-client:latest                                                                                                                                                                                         
+        imagePullPolicy: Always
+        env:
+          - name: PYSPARK_PYTHON
+            value: "python3"
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_PASSWORD 
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: AWS_SECRET_ACCESS_KEY
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: AWS_DEFAULT_REGION 

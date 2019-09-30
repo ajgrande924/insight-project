@@ -99,3 +99,12 @@
 **9-25-19**
 
 **9-26-19**
+
+**9-27-19**
+
+**9-28-19**
+
+  - [x] able to submit spark jobs to spark cluster on kubernetes and store in postgres
+  - [ ] 
+  - [ ] 
+  - [ ] 
