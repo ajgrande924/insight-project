@@ -10,7 +10,8 @@
   - [3.0 DevOps Pipeline](README.md#devops-pipeline)
     - 3.1 Containerize Data Pipeline
     - 3.2 Deployment Architecture and Flow
-    - 3.3 Deployment of Data Pipeline
+    - 3.3 Monitoring
+    - 3.4 Chaos Testing
   - [4.0 Engineering Challenges](README.md#engineering-challenges)
     - 4.1 Deployment of Kubernetes cluster
     - 4.2 Deployment of Spark on Kubernetes cluster
@@ -72,7 +73,9 @@ The data pipeline flow is as follows:
   - Data is replicated from the Postgres Master to the Postgres Slaves.
   - The Flask app reads the data from the Postgres Cluster to enable the user to visualize the results.
 
-### 3.3 Deployment of Data Pipeline
+### 3.3 Monitoring
+
+### 3.4 Chaos Testing
 
 ## 4.0 Engineering Challenges
 

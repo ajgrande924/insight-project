@@ -38,7 +38,7 @@ def write_df_to_pgsql(df, table_name):
     postgresql_password = os.environ.get('POSTGRES_PASSWORD')
     df.write \
         .format("jdbc") \
-        .option("url", "jdbc:postgresql://postgres/lmd") \
+        .option("url", "jdbc:postgresql://pg-postgresql/lmd") \
         .option("dbtable", table_name) \
         .option("user", postgresql_user) \
         .option("password", postgresql_password) \
@@ -92,10 +92,15 @@ def read_midi_files():
 
     # Read each MIDI file from AWS S3 bucket
     for obj in bucket.objects.all():
+        
+        if (number_of_files % 20 == 0):
+            print('Current number of processed files:', number_of_files)
+        
         number_of_files += 1
         s3_key = obj.key
         midi_obj_stream = boto_client.get_object(Bucket=s3_bucket, Key=s3_key)
         midi_obj = BytesIO(midi_obj_stream['Body'].read())
+        
         try:
             # Try required as a few MIDI files are invalid.
             pretty_midi_obj = pretty_midi.PrettyMIDI(midi_obj)
@@ -112,6 +117,10 @@ def read_midi_files():
         except:
             # Invalid MIDI files are stored.
             invalid_files.append(s3_key)
+
+    print('Total number of processed files:', number_of_files)
+    print('Total number of valid processed files:', number_of_valid_files)
+
     time_seq.append(['end read-file', time.time()])
     df_filename_instrument = spark.createDataFrame(filename_instrument_seq)
     print(df_filename_instrument)

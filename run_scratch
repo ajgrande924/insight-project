@@ -156,7 +156,7 @@ wip_submit_spark_job () {
   --jars /jars/org.postgresql_postgresql-42.1.1.jar \
   --master spark://spark-master:7077 \
   --deploy-mode client \
-  --conf spark.driver.host=spark-client /examples/python/main.py
+  --conf spark.driver.host=spark-client /examples/python/main_subset.py
 
   # graveyard
   /spark/bin/spark-submit --packages org.postgresql:postgresql:42.1.1 --master spark://spark-master:7077 --deploy-mode client --conf spark.driver.host=spark-client /examples/python/main.py

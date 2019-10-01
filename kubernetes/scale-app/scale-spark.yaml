@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spark-master
+  namespace: dev
 spec:
   selector:
     app: spark-master
@@ -24,6 +25,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spark-client
+  namespace: dev
 spec:
   selector:
     app: spark-client
@@ -32,10 +34,11 @@ spec:
 apiVersion: apps/v1                                                                                                                                                                                                                         
 kind: Deployment                                                                                                                                                                                                                            
 metadata:                                                                                                                                                                                                                                   
-  name: spark-master                                                                                                                                                                                                                        
+  name: spark-master
+  namespace: dev                                                                                                                                                                                                                      
   labels:                                                                                                                                                                                                                                   
     app: spark-master                                                                                                                                                                                                                       
-spec:                                                                                                                                                                                                                                       
+spec:                                                                                                                                                                                                                          
   selector:                                                                                                                                                                                                                                 
     matchLabels:                                                                                                                                                                                                                            
       app: spark-master                                                                                                                                                                                                                     
@@ -89,6 +92,7 @@ apiVersion: apps/v1
 kind: DaemonSet                                                                                                                                                                                                                             
 metadata:
   name: spark-worker
+  namespace: dev
   labels:
     app: spark-worker
 spec:
