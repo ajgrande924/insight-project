@@ -17,9 +17,22 @@ spec:
         image: ajgrande924/scale-app:latest
         ports:
         - containerPort: 80
-        env:
-          - name: HELLO
-            value: "HELLO"
+        env: 
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: scale-secret
+                key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service

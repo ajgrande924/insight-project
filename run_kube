@@ -3,9 +3,9 @@
 # bail out if anything fails
 set -e
 
-#####################
-##  PRE APP STEPS  ##
-#####################
+###################
+##  BUILD STEPS  ##
+###################
 
 DOCKER_USER=ajgrande924
 

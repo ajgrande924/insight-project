@@ -76,6 +76,27 @@ What baseline metrics to collect for CE, or use for comparison between experimen
     - Context
     - Breadcrumbs
 
+**chaos experiments**
+
+Experiment 1: Resource exhaustion of containers
+
+hypothesis:
+
+  - increased latency in incoming requests
+  - load balancer routes traffic away from availability zone 2
+  - receive alert message
+
+Experiment 2: Kill Stateful Replica Pod
+
+scenario: Master postres replica pod is killed
+
+hypothesis:
+
+  - brief unavailability of data for a x duration of time
+  - replica should get promoted (slave to master)
+  - new clone should kick off and system recovers
+
+
 #### references
 
   - [Principles of Chaos Engineering](http://principlesofchaos.org/?lang=ENcontent)

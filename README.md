@@ -9,7 +9,7 @@
     - 2.1 Overview - Scale
   - [3.0 DevOps Pipeline](README.md#devops-pipeline)
     - 3.1 Containerize Data Pipeline
-    - 3.2 Deployment Architecture
+    - 3.2 Deployment Architecture and Flow
     - 3.3 Deployment of Data Pipeline
   - [4.0 Engineering Challenges](README.md#engineering-challenges)
     - 4.1 Deployment of Kubernetes cluster
@@ -17,12 +17,16 @@
   - [5.0 Future Work](README.md#future-work)
   - [6.0 Development](README.md#development)
     - 6.1 Build and Deploy Data Pipeline
-  - [7.0 Miscellaneous]
+  - [7.0 Miscellaneous](README.md#miscellaneous)
     - [7.1 Todo](TODO.md)
     - [7.2 Notes](NOTES.md)
     - [7.3 Permissions](PERMISSIONS.md)
 
 ## 1.0 Introduction
+
+Having a resilient data pipeline for your business is becoming a necessity to stay competitive in times where vast amounts of data are generated and consumed. Containers allow you to focus on a single area of concern, whether it is application data capture, storage, analysis, or visualization. Container orchestrators like Kubernetes can help deploy, manage, and scale containerized components of modern cloud native data pipelines. So how do we test for resiliency?
+
+My project focuses on taking a data pipeline, Scale, containerizing each component of the pipeline, utilizing container orchestration to create a highly resilient pipeline, and testing for resiliency by running a set of chaos experiments.
 
 ### 1.1 Tech Stack
 
@@ -51,11 +55,20 @@ The existing batch data pipeline is called Scale. It is a music recommendation e
 
 ### 3.1 Containerize Data Pipeline
 
-### 3.2 Deployment Architecture
+The Flask, Postgres, and Spark components of the data pipeline have all been containerized. You can find the containers used for my deployment on [Docker Hub](https://cloud.docker.com/u/ajgrande924/repository/list) or you can build your own containers by following the instructions in the development section.
+
+### 3.2 Deployment Architecture and Flow
 
 <p align="center"> 
-  <img src="./media/insight_scale_arch.png" alt="insight_scale_arch" width="800px"/>
+  <img src="./media/insight_scale_arch_v2.png" alt="insight_scale_arch_v2" width="800px"/>
 </p>
+
+  1. The Lakh MIDI data set is loaded into an S3 bucket using the aws cli
+  2. The Spark Client submits a job to the spark cluster. 
+  3. The Spark Master delegates to the Spark Workers where the MIDI files are taken from the S3 bucket and instrument information is extracted.
+  4. Once instrument extraction is complete, the results are written by the Postgres Master.
+  5. Data is replicated from the Postgres Master to the Postgres Slaves.
+  6. The Flask app reads the data from the Postgres Cluster to enable the user to visualize the results.
 
 ### 3.3 Deployment of Data Pipeline
 
@@ -74,6 +87,10 @@ Spark is an open source, scalable, massively parallel, in-memory execution engin
   - Utilizing the kubernetes ecosystem (multitenancy)
   - Limitations to the standalone scheduler still allow you to utilized Kubernetes features such as resource management, a variety of persistent storage options, and logging integrations.
 
+<p align="center"> 
+  <img src="./media/insight_challenge_spark_v2.png" alt="insight_challenge_spark_v2" width="800px"/>
+</p>
+
 Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
 
 ## 5.0 Future Work
@@ -81,6 +98,7 @@ Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experi
   - [ ] convert deployment of instances within Kubernetes cluster to terraform
   - [ ] move from AWS EKS to KOPS for more flexibility
   - [ ] update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
+  - [ ] break up huge spark jobs into smaller ones to increase resiliency
 
 ## 6.0 Development
 
@@ -127,3 +145,5 @@ To destroy the data pipeline, you can run the following steps:
 | 3 | `./run_kube cleanup_monitoring` | cleanup monitoring |
 | 4 | `./run_kube cleanup_tiller` | cleanup tiller |
 | 5 | `./run_kube cleanup_eks` | destroy eks cluster + vpc |
+
+## 7.0 Miscellaneous

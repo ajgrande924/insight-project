@@ -9,7 +9,9 @@ set -e
 
 deploy () {
   setup_eks
+  # wait 60
   helm_init
+  # wait 60
   setup_monitoring
   setup_dashboards
   setup_scale_app
