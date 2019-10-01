@@ -30,6 +30,8 @@ replication:
   numSynchronousReplicas: 1
   applicationName: my_application
 postgresqlUsername: postgres
+postgresqlPassword: test
+postgresqlDatabase: lmd
 postgresqlDataDir: /bitnami/postgresql/data
 service:
   type: ClusterIP

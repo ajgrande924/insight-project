@@ -63,12 +63,14 @@ The Flask, Postgres, and Spark components of the data pipeline have all been con
   <img src="./media/insight_scale_arch_v2.png" alt="insight_scale_arch_v2" width="800px"/>
 </p>
 
-  1. The Lakh MIDI data set is loaded into an S3 bucket using the aws cli
-  2. The Spark Client submits a job to the spark cluster. 
-  3. The Spark Master delegates to the Spark Workers where the MIDI files are taken from the S3 bucket and instrument information is extracted.
-  4. Once instrument extraction is complete, the results are written by the Postgres Master.
-  5. Data is replicated from the Postgres Master to the Postgres Slaves.
-  6. The Flask app reads the data from the Postgres Cluster to enable the user to visualize the results.
+The data pipeline flow is as follows:
+
+  - The Lakh MIDI data set is loaded into an S3 bucket using the aws cli
+  - The Spark Client submits a job to the spark cluster. 
+  - The Spark Master delegates to the Spark Workers where the MIDI files are taken from the S3 bucket and instrument information is extracted.
+  - Once instrument extraction is complete, the results are written by the Postgres Master.
+  - Data is replicated from the Postgres Master to the Postgres Slaves.
+  - The Flask app reads the data from the Postgres Cluster to enable the user to visualize the results.
 
 ### 3.3 Deployment of Data Pipeline
 
@@ -88,17 +90,17 @@ Spark is an open source, scalable, massively parallel, in-memory execution engin
   - Limitations to the standalone scheduler still allow you to utilized Kubernetes features such as resource management, a variety of persistent storage options, and logging integrations.
 
 <p align="center"> 
-  <img src="./media/insight_challenge_spark_v2.png" alt="insight_challenge_spark_v2" width="800px"/>
+  <img src="./media/insight_challenge_spark_v2.png" alt="insight_challenge_spark_v2" width="450px"/>
 </p>
 
 Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
 
 ## 5.0 Future Work
 
-  - [ ] convert deployment of instances within Kubernetes cluster to terraform
   - [ ] move from AWS EKS to KOPS for more flexibility
-  - [ ] update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
+  - [ ] convert deployment of instances within Kubernetes cluster to terraform
   - [ ] break up huge spark jobs into smaller ones to increase resiliency
+  - [ ] update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
 
 ## 6.0 Development
 
