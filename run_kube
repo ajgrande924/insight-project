@@ -127,6 +127,14 @@ setup_scale_app () {
   # kubectl apply --recursive -f kubernetes/scale-app
 }
 
+load_pg () {
+  kubectl cp app/postgres/assets/hash_names.csv dev/pg-postgresql-0:/tmp
+  kubectl cp app/postgres/assets/midi_instruments.csv dev/pg-postgresql-0:/tmp
+  kubectl cp app/postgres/assets/load.sql dev/pg-postgresql-0:/tmp
+  # run in pod
+  # psql -U postgres -f /tmp/load.sql
+}
+
 submit_spark_job () {
   # run this inside spark client pod
   /spark/bin/spark-submit \

@@ -33,6 +33,11 @@ postgresqlUsername: postgres
 postgresqlPassword: test
 postgresqlDatabase: lmd
 postgresqlDataDir: /bitnami/postgresql/data
+initdbScripts:
+  init.sql: |
+    \c lmd
+    CREATE TABLE hash_name (hash character varying(80), song_name character varying(150), CONSTRAINT persons_pkey PRIMARY KEY (hash));
+    CREATE TABLE midi_instrument(code VARCHAR (5) UNIQUE NOT NULL, name VARCHAR (80) NOT NULL, family VARCHAR (55) NOT NULL);
 service:
   type: ClusterIP
   port: 5432

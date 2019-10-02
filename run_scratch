@@ -165,6 +165,29 @@ wip_submit_spark_job () {
   # check spark master ui
   kubectl port-forward <spark_master_pod> 8080:8080
 
+  # WIP
+
+  #Creating some variables to make the docker run command more readable
+  #App jar environment used by the spark-submit image
+  SPARK_APPLICATION_JAR_LOCATION="/opt/spark-apps/crimes-app.jar"
+  #App main class environment used by the spark-submit image
+  SPARK_APPLICATION_MAIN_CLASS="org.mvb.applications.CrimesApp"
+  #Extra submit args used by the spark-submit image
+  SPARK_SUBMIT_ARGS="--conf spark.executor.extraJavaOptions='-Dconfig-path=/opt/spark-apps/dev/config.conf'"
+  #We have to use the same network as the spark cluster(internally the image resolves spark master as spark://spark-master:7077)
+  docker run --network docker-spark-cluster_spark-network \
+  -v /mnt/spark-apps:/opt/spark-apps \
+  --env SPARK_APPLICATION_JAR_LOCATION=$SPARK_APPLICATION_JAR_LOCATION \
+  --env SPARK_APPLICATION_MAIN_CLASS=$SPARK_APPLICATION_MAIN_CLASS \
+  spark-submit:2.3.1
+
+  /spark/bin/spark-submit \
+    --driver-memory 4g \
+    --executor-memory 4g \
+    --master spark://spark-master:7077 \
+    /python/main.py \
+    1000
+
 }
 
 "$@"
