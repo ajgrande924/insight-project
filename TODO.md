@@ -104,7 +104,13 @@
 
 **9-28-19**
 
-  - [x] able to submit spark jobs to spark cluster on kubernetes and store in postgres
-  - [ ] ...
-  - [ ] ...
-  - [ ] ...
+  - [x] able to submit spark jobs to spark cluster on kubernetes and store in postgres (subset only)
+
+**10-1-19**
+
+  - [x] submit full job using spark client pod to spark cluster, able to store in postgres
+
+**10-2-19**
+
+  - [x] preload postgres cluster with tables and data, add to scripts
+  - [x] expose grafana dashboard (ELB)

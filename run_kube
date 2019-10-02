@@ -94,7 +94,8 @@ setup_monitoring () {
   --name prom-monitor\
   --namespace monitoring\
   --set grafana.sidecar.dashboards.enabled=true\
-  --set grafana.sidecar.dashboards.label=grafana_dashboard
+  --set grafana.sidecar.dashboards.label=grafana_dashboard\
+  --set grafana.service.type=LoadBalancer
   kubectl --namespace monitoring get pods -l "release=prom-monitor"
   echo ">>> setup_monitoring complete"
 }
@@ -218,7 +219,8 @@ debug () {
     --namespace monitoring\
     --set prometheusOperator.createCustomResource=false\
     --set grafana.sidecar.dashboards.enabled=true\
-    --set grafana.sidecar.dashboards.label=grafana_dashboard
+    --set grafana.sidecar.dashboards.label=grafana_dashboard\
+    --set grafana.service.type=LoadBalancer
   fi
 }
 
