@@ -34,8 +34,6 @@ spec:
               secretKeyRef:
                 name: scale-secret
                 key: POSTGRES_PASSWORD
-      nodeSelector:
-        disktype: ssd
 ---
 apiVersion: v1
 kind: Service
