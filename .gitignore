@@ -87,3 +87,4 @@ terraform/kubeconfig_*
 terraform/config-map-aws-auth_*
 app/lmd_full
 kubernetes/scale-app/scale-secret.yaml
+__pycache__

@@ -25,7 +25,7 @@ filename_instruments_seq = []
 filename_instrument_seq = []
 
 for obj in bucket.objects.all():
-    print(obj.key)
+    print(obj.key[2:])
     number_of_files += 1
     s3_key = obj.key
     midi_obj_stream = boto_client.get_object(Bucket=s3_bucket, Key=s3_key)
@@ -34,8 +34,9 @@ for obj in bucket.objects.all():
         print('try midi')
         # Try required as a few MIDI files are invalid.
         pretty_midi_obj = pretty_midi.PrettyMIDI(midi_obj)
+        print(pretty_midi_obj)
         number_of_valid_files += 1
-        filename = s3_key
+        filename = s3_key[2:]
         instruments_list = list(map(lambda x: str(x.program), pretty_midi_obj.instruments))
         instruments_list_set = set(instruments_list)
         instruments_list_uniq = list(instruments_list_set)

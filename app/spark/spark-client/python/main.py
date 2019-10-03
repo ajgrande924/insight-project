@@ -105,7 +105,7 @@ def read_midi_files():
             # Try required as a few MIDI files are invalid.
             pretty_midi_obj = pretty_midi.PrettyMIDI(midi_obj)
             number_of_valid_files+=1
-            filename = s3_key
+            filename = s3_key[2:]
             instruments_list = list(map(lambda x: str(x.program), pretty_midi_obj.instruments))
             instruments_list_set = set(instruments_list)
             instruments_list_uniq = list(instruments_list_set)
