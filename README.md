@@ -75,6 +75,15 @@ The data pipeline flow is as follows:
 
 ### 3.3 Monitoring
 
+In order to monitor the Kubernetes cluster and the components within it, I decided to use the Kubernetes Operator for Prometheus through Helm. The Prometheus Operator includes:
+
+  - prometheus-operator
+  - prometheus
+  - alertmanager
+  - node-exporter
+  - kube-state-metrics
+  - grafana
+
 ### 3.4 Chaos Testing
 
 ## 4.0 Engineering Challenges
@@ -97,6 +106,8 @@ Spark is an open source, scalable, massively parallel, in-memory execution engin
 </p>
 
 Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
+
+### 4.3 Deployment of Postgres on Kubernetes cluster
 
 ## 5.0 Future Work
 
