@@ -126,6 +126,12 @@ SELECT fi.filename, hn.song_name,\
   GROUP BY fi.filename, hn.song_name;
 ```
 
+Clicking multiple options in the instrument drop down caused the postgres database to increase in cpu as show below:
+
+<p align="center"> 
+  <img src="./media/insight_sql_query_high_cpu_pg.png" alt="insight_sql_query_high_cpu_pg" width="800px"/>
+</p>
+
 The information of the run is listed below:
   
   - 395MB
