@@ -15,6 +15,8 @@
   - [4.0 Engineering Challenges](README.md#engineering-challenges)
     - 4.1 Deployment of Kubernetes cluster
     - 4.2 Deployment of Spark on Kubernetes cluster
+    - 4.3 Deployment of Postgres on Kubernetes cluster
+    - 4.4 Flask App SQL Query to Postgres
   - [5.0 Future Work](README.md#future-work)
   - [6.0 Development](README.md#development)
     - 6.1 Build and Deploy Data Pipeline
@@ -108,6 +110,38 @@ Spark is an open source, scalable, massively parallel, in-memory execution engin
 Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
 
 ### 4.3 Deployment of Postgres on Kubernetes cluster
+
+### 4.4 Flask App SQL Query to Postgres
+
+The query for the flask app route, `/get_songs_for_instruments`, does not work for the full set of 0 hash midi files:
+
+```sql
+SELECT fi.filename, hn.song_name,\
+  COUNT(DISTINCT fi.instrument) num_of_instruments,\
+  COUNT(fs.distance) / COUNT(DISTINCT fi.instrument) AS num_of_simSongs\
+  FROM (SELECT filename FROM filename_instrument_run3 WHERE instrument = '0' ) tbl\
+  JOIN hash_name hn ON hn.hash = tbl.filename\
+  JOIN filename_instrument_run3 fi ON fi.filename = tbl.filename\
+  JOIN filepair_similarity_run3 fs ON (fs."filename_A" = tbl.filename OR fs."filename_B" = tbl.filename )\
+  GROUP BY fi.filename, hn.song_name;
+```
+
+The information of the run is listed below:
+  
+  - 395MB
+  - 11,133 files
+  - `midi_instrument`: 128 entries
+  - `hash_name`: 178,561 entries
+  - `filename_instrument`: 69,262 entries
+  - `filepair_similarity`: 51,878 entries
+
+When a subset of the 0 hash midi files was processed, the flask app was able to work fine. You can see the information below:
+
+  - 1,000 files
+  - `midi_instrument`: 128 entries
+  - `hash_name`: 178,561 entries
+  - `filename_instrument`: 6,205 entries
+  - `filepair_similarity`: 447 entries
 
 ## 5.0 Future Work
 

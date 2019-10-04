@@ -15,7 +15,7 @@ import time
 import config
 
 s3_bucket = 'lmd-midi'
-subset_count = 40
+subset_count = 1000
 df_filename_instrument_name = 'filename_instrument_run3'
 df_matches_name = 'filepair_similarity_run3'
 spark_app_name = 'process_midi_files'
@@ -93,6 +93,9 @@ def read_midi_files():
 
     # Read each MIDI file from AWS S3 bucket
     for obj in bucket.objects.all():
+
+        if (number_of_files % 20 == 0):
+            print('Current number of processed files:', number_of_files)
 
         if (number_of_files > subset_count):
             break
