@@ -108,3 +108,9 @@ hypothesis:
 
 be very valuable by mastering open source tools to help companies with vendor lock in
 give kube more than it can handle by oversubscription - best practices
+
+
+In an attemp to gather steady state metrics of the system...
+
+
+helm upgrade -f helm/postgres/values.yaml pg stable/postgres

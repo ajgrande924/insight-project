@@ -22,12 +22,12 @@ securityContext:
 serviceAccount:
   enabled: false
 replication:
-  enabled: false
+  enabled: false # false | true
   user: repl_user
   password: repl_password
-  slaveReplicas: 1
-  synchronousCommit: "off"
-  numSynchronousReplicas: 0
+  slaveReplicas: 2
+  synchronousCommit: "off" # "off" | "on"
+  numSynchronousReplicas: 0 # 0 | 1
   applicationName: my_application
 postgresqlUsername: postgres
 postgresqlPassword: test

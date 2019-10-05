@@ -22,17 +22,22 @@ securityContext:
 serviceAccount:
   enabled: false
 replication:
-  enabled: true
+  enabled: true # false | true
   user: repl_user
   password: repl_password
   slaveReplicas: 2
-  synchronousCommit: "on"
-  numSynchronousReplicas: 1
+  synchronousCommit: "on" # "off" | "on"
+  numSynchronousReplicas: 1 # 0 | 1
   applicationName: my_application
 postgresqlUsername: postgres
 postgresqlPassword: test
 postgresqlDatabase: lmd
 postgresqlDataDir: /bitnami/postgresql/data
+initdbScripts:
+  init.sql: |
+    \c lmd
+    CREATE TABLE hash_name (hash character varying(80), song_name character varying(150), CONSTRAINT persons_pkey PRIMARY KEY (hash));
+    CREATE TABLE midi_instrument(code VARCHAR (5) UNIQUE NOT NULL, name VARCHAR (80) NOT NULL, family VARCHAR (55) NOT NULL);
 service:
   type: ClusterIP
   port: 5432
@@ -84,3 +89,37 @@ readinessProbe:
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
+metrics:
+  enabled: false
+  service:
+    type: ClusterIP
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9187"
+    loadBalancerIP:
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
+  image:
+    registry: docker.io
+    repository: bitnami/postgres-exporter
+    tag: 0.5.1-debian-9-r48
+    pullPolicy: IfNotPresent
+  securityContext:
+    enabled: false
+    runAsUser: 1001
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+extraEnv: {}

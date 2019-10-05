@@ -63,7 +63,7 @@ The Flask, Postgres, and Spark components of the data pipeline have all been con
 ### 3.2 Deployment Architecture and Flow
 
 <p align="center"> 
-  <img src="./media/insight_scale_arch_v2.png" alt="insight_scale_arch_v2" width="800px"/>
+  <img src="./media/insight_scale_arch_v3.png" alt="insight_scale_arch_v3" width="800px"/>
 </p>
 
 The data pipeline flow is as follows:
