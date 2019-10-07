@@ -3,7 +3,7 @@ global:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 11.5.0-debian-9-r34
+  tag: 11.5.0-debian-9-r60
   pullPolicy: IfNotPresent
   debug: false
 volumePermissions:
@@ -38,6 +38,7 @@ initdbScripts:
     \c lmd
     CREATE TABLE hash_name (hash character varying(80), song_name character varying(150), CONSTRAINT persons_pkey PRIMARY KEY (hash));
     CREATE TABLE midi_instrument(code VARCHAR (5) UNIQUE NOT NULL, name VARCHAR (80) NOT NULL, family VARCHAR (55) NOT NULL);
+    CREATE TABLE debugger(col_str_one VARCHAR (50) UNIQUE NOT NULL, col_str_two VARCHAR (50) NOT NULL);
 service:
   type: ClusterIP
   port: 5432
@@ -103,7 +104,7 @@ metrics:
   image:
     registry: docker.io
     repository: bitnami/postgres-exporter
-    tag: 0.5.1-debian-9-r48
+    tag: 0.5.1-debian-9-r73
     pullPolicy: IfNotPresent
   securityContext:
     enabled: false

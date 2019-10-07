@@ -88,11 +88,26 @@ In order to monitor the Kubernetes cluster and the components within it, I decid
 
 ### 3.4 Chaos Testing
 
+**Steady State Testing**
+
+
+
+**Experiment #1: Terminate Pods in Availability Zone**
+
+  scenario:
+  
+  hypothesis:
+  
+  execution:
+  
+  results:
+
+
 ## 4.0 Engineering Challenges
 
 ### 4.1 Deployment of Kubernetes cluster
   
-I went through a few iterations when deploying my kubernetes cluster to the cloud. I tried using both KOPS and AWS. I decided to choose aws eks for a few reasons. The current data pipeline was also deployed on AWS with EC2 instances and the storage in which we will pull the data is also in AWS S3 which provides a much easier migration. AWS EKS is extremely simple to set up especially in conjunction with terraform. There is actually a great module on the terraform registry which allows you to use the base setup and spin up a cluster in 10 minutes. For time's sake, when you compare with KOPS, you do not have to provision anything in your control plane, you are only specifying your worker nodes. Also, one current downside to KOPS is that the terraform files generated for your cluster do not support `terraform>=0.12`. Since my terraform files are using the most up to date version of terraform, I did not want switch between versions to manage my infrastucture.
+I went through a few iterations when deploying my Kubernetes cluster to the cloud. I tried using both KOPS and AWS EKS. I decided to choose AWS EKS for a few reasons. The current data pipeline was also deployed on AWS with EC2 instances and the storage in which we will pull the data is also in AWS S3 which provides a much easier migration. AWS EKS is extremely simple to set up especially in conjunction with Terraform. There is actually a great module on the Terraform registry which allows you to use the base setup and spin up a cluster in 10 minutes. For time's sake, when you compare with KOPS, you do not have to provision anything in your control plane, you are only specifying your worker nodes. Also, one current downside to KOPS is that the terraform files generated for your cluster do not support `terraform>=0.12`. Since my terraform files are using the most up to date version of terraform, I did not want switch between versions to manage my infrastucture.
   
 ### 4.2 Deployment of Spark on Kubernetes cluster
 
