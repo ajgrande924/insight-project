@@ -106,11 +106,12 @@ hypothesis:
 
   - [create a production ready postgresql cluster bitnami kubernetes and helm](https://engineering.bitnami.com/articles/create-a-production-ready-postgresql-cluster-bitnami-kubernetes-and-helm.html)
 
-be very valuable by mastering open source tools to help companies with vendor lock in
-give kube more than it can handle by oversubscription - best practices
+#### things to think about
 
+  - be very valuable by mastering open source tools to help companies with vendor lock in
+  - give kube more than it can handle by oversubscription (best practices)
 
-In an attemp to gather steady state metrics of the system...
+#### questions they may ask
 
-
-helm upgrade -f helm/postgres/values.yaml pg stable/postgres
+  - what type of load balancer am I using?
+  - what other type of chaos testing can I apply on my deployment? 

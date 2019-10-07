@@ -51,6 +51,18 @@ def load_index_page():
     conn.close()
     return jsonify(songs_by_instrument)
 
+@app.route("/test_db")
+def load_index_page():
+    with psycopg2.connect(dbname=config.PGSQL_DBNAME, user=config.PGSQL_USER, password=config.PGSQL_PASSWORD, host=config.PGSQL_HOST, port=config.PGSQL_PORT) as conn:
+        with conn.cursor() as cur:
+            songs_by_instrument = {
+                'Flute': get_10songs_for_instrument(cur, 73),
+                'Bag pipe': get_10songs_for_instrument(cur, 109)
+            }
+    cur.close()
+    conn.close()
+    return jsonify(songs_by_instrument)
+
 @app.route("/get_similar_songs")
 def get_similar_songs():
     filename = session['filename']

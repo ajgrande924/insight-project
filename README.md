@@ -90,18 +90,25 @@ In order to monitor the Kubernetes cluster and the components within it, I decid
 
 **Steady State Testing**
 
-
+In order to start testing, I need to figure out what is the steady state of the application. The tool I will use to simulate steady state is the `loadtest` command line tool. I will hit the application with a command like this:
+```sh
+# time(s) = 300, concurrency = 500 users, rps = 500å
+loadtest -t 300 -c 500 --rps 500 http://scale.practicedevops.xyz/test_db
+```
 
 **Experiment #1: Terminate Pods in Availability Zone**
 
-  scenario:
-  
-  hypothesis:
-  
-  execution:
-  
-  results:
+**scenario**
 
+The first experiment I will run is to terminate pods in an availability zone, specifically the flask and postgres pods under steady state conditions. The steady state condition for this application is to handle x concurrent users and I will simulate this on the `/test_db` route of the application. This route will not only test the load of the flask application but also the load of the postgres database by performing 2 queries per request.
+
+**hypothesis**
+
+My hypothesis for this experiment is that the system deployed will:
+
+  - reroute traffic away from the terminated pods in the availability zone after termination
+  - increased latency per request right after termination
+  - pods will self heal after x amount of time
 
 ## 4.0 Engineering Challenges
 

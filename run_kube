@@ -110,7 +110,7 @@ setup_scale_app () {
   helm install stable/postgresql\
   --name pg\
   --namespace dev\
-  -f ./helm/postgres/values.yaml
+  -f ./helm/postgres/values-prod.yaml
 
   # setup secrets
   kubectl apply --recursive -f kubernetes/scale-app/scale-secret.yaml
@@ -130,7 +130,7 @@ setup_scale_app () {
 
 load_pg () {
   # load pg files in pod
-  PG_MASTER_NAME=pg-postgresql-0
+  PG_MASTER_NAME=pg-postgresql-master-0
   kubectl cp app/postgres/assets/hash_names.csv dev/${PG_MASTER_NAME}:/tmp
   kubectl cp app/postgres/assets/midi_instruments.csv dev/${PG_MASTER_NAME}:/tmp
   kubectl cp app/postgres/assets/load.sql dev/${PG_MASTER_NAME}:/tmp
@@ -146,7 +146,7 @@ submit_spark_job () {
   --jars /jars/org.postgresql_postgresql-42.1.1.jar \
   --master spark://spark-master:7077 \
   --deploy-mode client \
-  --conf spark.driver.host=spark-client /examples/python/main.py
+  --conf spark.driver.host=spark-client /examples/python/main_subset.py
 }
 
 ############################
