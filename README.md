@@ -60,6 +60,14 @@ The existing batch data pipeline is called Scale. It is a music recommendation e
 
 The Flask, Postgres, and Spark components of the data pipeline have all been containerized. You can find the containers used for my deployment on [Docker Hub](https://cloud.docker.com/u/ajgrande924/repository/list) or you can build your own containers by following the instructions in the development section.
 
+| Container | Description |
+| :---: | :---- |
+| `ajgrande924/scale-app` | scale flask application |
+| `ajgrande924/spark-base` | custom spark base image |
+| `ajgrande924/spark-master` | spark master |
+| `ajgrande924/spark-worker` | spark worker |
+| `ajgrande924/spark-client` | spark client |
+
 ### 3.2 Deployment Architecture and Flow
 
 <p align="center"> 

@@ -134,19 +134,19 @@ load_pg () {
   kubectl cp app/postgres/assets/hash_names.csv dev/${PG_MASTER_NAME}:/tmp
   kubectl cp app/postgres/assets/midi_instruments.csv dev/${PG_MASTER_NAME}:/tmp
   kubectl cp app/postgres/assets/load.sql dev/${PG_MASTER_NAME}:/tmp
-  # run in pod
+  
+  # kube command outside
+  # kubectl exec -it ${PG_MASTER_NAME} -n dev -- psql -U postgres -f /tmp/load.sql
+  
+  # run in pod, two step
+  # kubectl exec -it ${PG_MASTER_NAME} -n dev
   # psql -U postgres -f /tmp/load.sql
 }
 
 submit_spark_job () {
-  # run this inside spark client pod
-  /spark/bin/spark-submit \
-  --driver-class-path /jars/org.postgresql_postgresql-42.1.1.jar \
-  --conf spark.executor.extraClassPath=/jars/org.postgresql_postgresql-42.1.1.jar \
-  --jars /jars/org.postgresql_postgresql-42.1.1.jar \
-  --master spark://spark-master:7077 \
-  --deploy-mode client \
-  --conf spark.driver.host=spark-client /examples/python/main_subset.py
+  SPARK_CLIENT_POD=$(kubectl get pods --all-namespaces | grep spark-client | awk '{print $2}' | head -n 1)
+  echo "spark_client_pod: ${SPARK_CLIENT_POD}"
+  kubectl exec -it ${SPARK_CLIENT_POD} -n dev -- /examples/scripts/run.sh run_spark_subset
 }
 
 ############################

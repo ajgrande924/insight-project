@@ -25,7 +25,7 @@ replication:
   enabled: true # false | true
   user: repl_user
   password: repl_password
-  slaveReplicas: 2
+  slaveReplicas: 3
   synchronousCommit: "off" # "off" | "on"
   numSynchronousReplicas: 1 # 0 | 1
   applicationName: my_application
