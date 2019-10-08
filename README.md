@@ -12,11 +12,11 @@
     - 3.2 Deployment Architecture and Flow
     - 3.3 Monitoring
     - 3.4 Chaos Testing
+    - 3.5 Pipeline Limitations
   - [4.0 Engineering Challenges](README.md#engineering-challenges)
     - 4.1 Deployment of Kubernetes cluster
     - 4.2 Deployment of Spark on Kubernetes cluster
     - 4.3 Deployment of Postgres on Kubernetes cluster
-    - 4.4 Flask App SQL Query to Postgres
   - [5.0 Future Work](README.md#future-work)
   - [6.0 Development](README.md#development)
     - 6.1 Build and Deploy Data Pipeline
@@ -114,32 +114,11 @@ My hypothesis for this experiment is that the system deployed will:
   - increased latency per request right after termination
   - pods will self heal after x amount of time
 
-## 4.0 Engineering Challenges
+### 3.5 Pipeline Limitations
 
-### 4.1 Deployment of Kubernetes cluster
-  
-I went through a few iterations when deploying my Kubernetes cluster to the cloud. I tried using both KOPS and AWS EKS. I decided to choose AWS EKS for a few reasons. The current data pipeline was also deployed on AWS with EC2 instances and the storage in which we will pull the data is also in AWS S3 which provides a much easier migration. AWS EKS is extremely simple to set up especially in conjunction with Terraform. There is actually a great module on the Terraform registry which allows you to use the base setup and spin up a cluster in 10 minutes. For time's sake, when you compare with KOPS, you do not have to provision anything in your control plane, you are only specifying your worker nodes. Also, one current downside to KOPS is that the terraform files generated for your cluster do not support `terraform>=0.12`. Since my terraform files are using the most up to date version of terraform, I did not want switch between versions to manage my infrastucture.
-  
-### 4.2 Deployment of Spark on Kubernetes cluster
+**Postgres SQL queries from Flask**
 
-Spark is an open source, scalable, massively parallel, in-memory execution engine for analytics applications. It includes prebuilt machine learning algorithms which the scale application utilizes. Why should we use the Kubernetes cluster manager as opposed to the Standalone Scheduler? 
-  
-  - Are you using data analytical pipeline which is containerized? Are different pieces of your application containerized utilizing modern application patterns? It may make sense to use Kubernetes to manage your entire pipeline.
-  - Resource sharing is better optimized b/c instead of running your pipeline on a dedicated hardware for each component, it is more efficient and optimal to run on a Kubernetes cluster so you can share resources between components.
-  - Utilizing the kubernetes ecosystem (multitenancy)
-  - Limitations to the standalone scheduler still allow you to utilized Kubernetes features such as resource management, a variety of persistent storage options, and logging integrations.
-
-<p align="center"> 
-  <img src="./media/insight_challenge_spark_v2.png" alt="insight_challenge_spark_v2" width="450px"/>
-</p>
-
-Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
-
-### 4.3 Deployment of Postgres on Kubernetes cluster
-
-### 4.4 Flask App SQL Query to Postgres
-
-The query for the flask app route, `/get_songs_for_instruments`, does not work for the full set of 0 hash midi files:
+One of the limitations I noticed when I tried th deploy the data pipeline was that there was a limitation on the flask application to perform the necessary queries for the instrument dropdown. The query for the flask app route, `/get_songs_for_instruments`, does not work for the full set of 0 hash midi files:
 
 ```sql
 SELECT fi.filename, hn.song_name,\
@@ -174,6 +153,31 @@ When a subset of the 0 hash midi files was processed, the flask app was able to 
   - `hash_name`: 178,561 entries
   - `filename_instrument`: 6,205 entries
   - `filepair_similarity`: 447 entries
+
+## 4.0 Engineering Challenges
+
+### 4.1 Deployment of Kubernetes cluster
+  
+I went through a few iterations when deploying my Kubernetes cluster to the cloud. I tried using both KOPS and AWS EKS. I decided to choose AWS EKS for a few reasons. The current data pipeline was also deployed on AWS with EC2 instances and the storage in which we will pull the data is also in AWS S3 which provides a much easier migration. AWS EKS is extremely simple to set up especially in conjunction with Terraform. There is actually a great module on the Terraform registry which allows you to use the base setup and spin up a cluster in 10 minutes. For time's sake, when you compare with KOPS, you do not have to provision anything in your control plane, you are only specifying your worker nodes. Also, one current downside to KOPS is that the terraform files generated for your cluster do not support `terraform>=0.12`. Since my terraform files are using the most up to date version of terraform, I did not want switch between versions to manage my infrastucture.
+  
+### 4.2 Deployment of Spark on Kubernetes cluster
+
+Spark is an open source, scalable, massively parallel, in-memory execution engine for analytics applications. It includes prebuilt machine learning algorithms which the scale application utilizes. Why should we use the Kubernetes cluster manager as opposed to the Standalone Scheduler? 
+  
+  - Are you using data analytical pipeline which is containerized? Are different pieces of your application containerized utilizing modern application patterns? It may make sense to use Kubernetes to manage your entire pipeline.
+  - Resource sharing is better optimized b/c instead of running your pipeline on a dedicated hardware for each component, it is more efficient and optimal to run on a Kubernetes cluster so you can share resources between components.
+  - Utilizing the kubernetes ecosystem (multitenancy)
+  - Limitations to the standalone scheduler still allow you to utilized Kubernetes features such as resource management, a variety of persistent storage options, and logging integrations.
+
+<p align="center"> 
+  <img src="./media/insight_challenge_spark_v2.png" alt="insight_challenge_spark_v2" width="450px"/>
+</p>
+
+Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experimental. There are patches to the current version of Spark that can be added to make communication with the spark client and the kubernetes api server to work properly. Kubernetes scheduler will dynamically create pods for the spark cluster once the client submits the job. Communication with the spark cluster directly from the spark client is similar to the standalone scheduler but with utilization of some Kubernetes features such as resource management. It requires that the spark cluster is already up and running before you send the job.
+
+### 4.3 Deployment of Postgres on Kubernetes cluster
+
+todo
 
 ## 5.0 Future Work
 
