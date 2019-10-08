@@ -223,6 +223,8 @@ debug () {
     --set grafana.sidecar.dashboards.enabled=true\
     --set grafana.sidecar.dashboards.label=grafana_dashboard\
     --set grafana.service.type=LoadBalancer
+  elif [ "$1" == "check_node_to_pod" ]; then
+    kubectl get pod -o=custom-columns=NODE:.spec.nodeName,NAME:.metadata.name --all-namespaces
   fi
 }
 

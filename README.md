@@ -33,11 +33,16 @@ My project focuses on taking a data pipeline, Scale, containerizing each compone
 
 ### 1.1 Tech Stack
 
-  - Terraform
-  - Kubernetes (AWS EKS)
-  - Helm
-  - Prometheus / Grafana
-  - Data Pipeline: Spark, Postgres, Flask
+| Technology | Use Case |
+| :---: | :---- |
+| Terraform | automate infrastructure |
+| AWS EKS | Kubernetess cluster deployment |
+| Helm | Kubernetes configs in the form of charts |
+| Prometheus / Grafana | monitoring setup through Kubernetes Operator |
+| Kube Monkey | chaos testing tool to terminate pods |
+| Spark | data extraction for pipeline |
+| Postgres | data storage for pipeline |
+| Flask | data visualization for pipeline |
 
 ## 2.0 Data Pipeline
 
@@ -64,9 +69,9 @@ The Flask, Postgres, and Spark components of the data pipeline have all been con
 | :---: | :---- |
 | `ajgrande924/scale-app` | scale flask application |
 | `ajgrande924/spark-base` | custom spark base image |
-| `ajgrande924/spark-master` | spark master |
-| `ajgrande924/spark-worker` | spark worker |
-| `ajgrande924/spark-client` | spark client |
+| `ajgrande924/spark-master` | spark master built from spark base |
+| `ajgrande924/spark-worker` | spark worker built from spark base |
+| `ajgrande924/spark-client` | spark client built from spark base |
 
 ### 3.2 Deployment Architecture and Flow
 
@@ -191,6 +196,7 @@ todo
 
   - [ ] move from AWS EKS to KOPS for more flexibility
   - [ ] convert deployment of instances within Kubernetes cluster to terraform
+  - [ ] create one click deploy and destroy of entire infrastructure
   - [ ] break up huge spark jobs into smaller ones to increase resiliency
   - [ ] update Spark deployment to communicate with Kubernetes scheduler to submit jobs instead of communicating with Spark master directly
 
@@ -229,6 +235,8 @@ To deploy the data pipeline to a Kubernetes cluster, you can run the following s
 | 3 | `./run_kube setup_monitoring` | setup monitoring |
 | 4 | `./run_kube setup_dashboards` | load custom grafana dashboards |
 | 5 | `./run_kube setup_scale_app` | setup scale data pipeline |
+| 6 | `./run_kube load_pg` | load postgres w/ tables and data |
+| 7 | `./run_kube submit_spark_job` | submit spark job through spark client pod |
 
 To destroy the data pipeline, you can run the following steps:
 
