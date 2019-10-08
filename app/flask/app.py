@@ -52,7 +52,7 @@ def load_index_page():
     return jsonify(songs_by_instrument)
 
 @app.route("/test_db")
-def load_index_page():
+def test_db():
     with psycopg2.connect(dbname=config.PGSQL_DBNAME, user=config.PGSQL_USER, password=config.PGSQL_PASSWORD, host=config.PGSQL_HOST, port=config.PGSQL_PORT) as conn:
         with conn.cursor() as cur:
             songs_by_instrument = {
