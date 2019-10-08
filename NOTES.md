@@ -96,7 +96,6 @@ hypothesis:
   - replica should get promoted (slave to master)
   - new clone should kick off and system recovers
 
-
 #### references
 
   - [Principles of Chaos Engineering](http://principlesofchaos.org/?lang=ENcontent)
@@ -115,3 +114,5 @@ hypothesis:
 
   - what type of load balancer am I using?
   - what other type of chaos testing can I apply on my deployment? 
+  - why am I running your spark cluster in one availability zone?
+  - knowing what I know now, how would I change the components (spark, postgres, flask) of my deployment?

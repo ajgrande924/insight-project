@@ -98,6 +98,10 @@ loadtest -t 300 -c 500 --rps 500 http://scale.practicedevops.xyz/test_db
 
 **Experiment #1: Terminate Pods in Availability Zone**
 
+<p align="center"> 
+  <img src="./media/insight_chaos_exp_one.png" alt="insight_chaos_exp_one" width="450px"/>
+</p>
+
 **scenario**
 
 The first experiment I will run is to terminate pods in an availability zone, specifically the flask and postgres pods under steady state conditions. The steady state condition for this application is to handle x concurrent users and I will simulate this on the `/test_db` route of the application. This route will not only test the load of the flask application but also the load of the postgres database by performing 2 queries per request.
