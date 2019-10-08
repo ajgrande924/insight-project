@@ -104,10 +104,28 @@ In order to monitor the Kubernetes cluster and the components within it, I decid
 **Steady State Testing**
 
 In order to start testing, I need to figure out what is the steady state of the application. The tool I will use to simulate steady state is the `loadtest` command line tool. I will hit the application with a command like this:
+
 ```sh
-# time(s) = 300, concurrency = 500 users, rps = 500å
+# time(s) = 300, concurrency = 500 users, rps = 500
 loadtest -t 300 -c 500 --rps 500 http://scale.practicedevops.xyz/test_db
 ```
+
+http://scale.practicedevops.xyz
+
+| Time (t) | Concurrency (c) | Requests Per Second (rps) | Mean Latency | % Error |
+| :---: | :---: | :---: | :---: | :---: |
+| 60 s | 500 | 500 | 114 ms | 0% (0/16824) |
+| 60 s | 1000 | 1000 | 1151.8 ms | 51% (18014/35374) |
+| 60 s | 750 | 750 | 179.3 ms | 42% (12379/29496) |
+
+http://scale.practicedevops.xyz/test_db
+
+| Time (t) | Concurrency (c) | Requests Per Second (rps) | Mean Latency | % Error |
+| :---: | :---: | :---: | :---: | :---: |
+| 60 s | 100 | 100 | 106.7 ms | 0% (0/5991) |
+| 60 s | 500 | 500 | 3555.8 ms | 9.6% (1617/16855) |
+| 60 s | 150 | 150 | 101.5 ms | 0% (0/8986) |
+| 60 s | 200 | 200 | 106.1 ms | 0% (0/11973) |
 
 **Experiment #1: Terminate Pods in Availability Zone**
 
@@ -126,6 +144,23 @@ My hypothesis for this experiment is that the system deployed will:
   - reroute traffic away from the terminated pods in the availability zone after termination
   - increased latency per request right after termination
   - pods will self heal after x amount of time
+
+**results**
+
+I ran @ steady state (c=100, rps=100) and terminated an instance of the flask and postgres pods in the same availability zone. These are my observations:
+
+<p align="center"> 
+  <img src="./media/exp1_run1_grafana_flask.png" alt="exp1_run1_grafana_flask" width="800px"/>
+</p>
+
+<p align="center"> 
+  <img src="./media/exp1_run1_grafana_pg_slave.png" alt="exp1_run1_grafana_pg_slave" width="800px"/>
+</p>
+
+<p align="center"> 
+  <img src="./media/exp1_run1_console_loadtest.png" alt="exp1_run1_console_loadtest" width="450px"/>
+</p>
+
 
 ### 3.5 Pipeline Limitations
 
