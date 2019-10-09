@@ -110,7 +110,7 @@ In order to start testing, I need to figure out what is the steady state of the 
 loadtest -t 300 -c 500 --rps 500 http://scale.practicedevops.xyz/test_db
 ```
 
-http://scale.practicedevops.xyz
+http://scale.practicedevops.xyz (home route only hits flask application)
 
 | Time (t) | Concurrency (c) | Requests Per Second (rps) | Mean Latency | % Error |
 | :---: | :---: | :---: | :---: | :---: |
@@ -118,7 +118,7 @@ http://scale.practicedevops.xyz
 | 60 s | 1000 | 1000 | 1151.8 ms | 51% (18014/35374) |
 | 60 s | 750 | 750 | 179.3 ms | 42% (12379/29496) |
 
-http://scale.practicedevops.xyz/test_db
+http://scale.practicedevops.xyz/test_db (test_db route hits both flask application and postgres database)
 
 | Time (t) | Concurrency (c) | Requests Per Second (rps) | Mean Latency | % Error |
 | :---: | :---: | :---: | :---: | :---: |
@@ -133,11 +133,7 @@ http://scale.practicedevops.xyz/test_db
   <img src="./media/insight_chaos_exp_one.png" alt="insight_chaos_exp_one" width="450px"/>
 </p>
 
-**scenario**
-
 The first experiment I will run is to terminate pods in an availability zone, specifically the flask and postgres pods under steady state conditions. The steady state condition for this application is to handle x concurrent users and I will simulate this on the `/test_db` route of the application. This route will not only test the load of the flask application but also the load of the postgres database by performing 2 queries per request.
-
-**hypothesis**
 
 My hypothesis for this experiment is that the system deployed will:
 
@@ -145,21 +141,28 @@ My hypothesis for this experiment is that the system deployed will:
   - increased latency per request right after termination
   - pods will self heal after x amount of time
 
-**results**
-
-I ran @ steady state (c=100, rps=100) and terminated an instance of the flask and postgres pods in the same availability zone. These are my observations:
+I ran @ steady state (c=100, rps=100) and terminated an instance of the flask and postgres pods in the same availability zone @ about 16:02. In the first screenshot, you can see metrics for the flask application deployment, specifically CPU percentage. Notice that when the flask pod was terminated, another pod/replica was created almost instantaneously.  
 
 <p align="center"> 
   <img src="./media/exp1_run1_grafana_flask.png" alt="exp1_run1_grafana_flask" width="800px"/>
 </p>
 
+In the second screenshot, you can see the metrics for the postgres slave pod. Notice that the postgres slave pod was unreachable before it self healed after 90 seconds.
+
 <p align="center"> 
   <img src="./media/exp1_run1_grafana_pg_slave.png" alt="exp1_run1_grafana_pg_slave" width="800px"/>
 </p>
 
+But how did this affect the incoming requests send to the application during this period of time? The sceenshot below shows the results of the load test during pod termination. There were only 2 errors during this time period resulting in a <0.01% error rate.
+
 <p align="center"> 
   <img src="./media/exp1_run1_console_loadtest.png" alt="exp1_run1_console_loadtest" width="450px"/>
 </p>
+
+Base off of thes results, I would try to:
+
+  - minimize the time it takes for the postgres slave pod to self heal
+  - increase the amount of concurrent users the application can handle
 
 
 ### 3.5 Pipeline Limitations

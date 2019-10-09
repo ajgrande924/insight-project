@@ -116,3 +116,6 @@ hypothesis:
   - what other type of chaos testing can I apply on my deployment? 
   - why am I running your spark cluster in one availability zone?
   - knowing what I know now, how would I change the components (spark, postgres, flask) of my deployment?
+  - spark deployment comparison with yarn and mesos
+  - why run stateful applications like postgres in kubernetes?
+  - make sure to mention that I am working on top of someone elses project
