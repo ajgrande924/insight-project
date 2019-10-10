@@ -37,8 +37,11 @@ hypothesis:
   - simplify your development and deployment picture by putting all application components on Kubernetes
   - unified orchestration of stateless and stateful applications
   - LINK - [Considerations for running stateful apps on Kubernetes](https://www.altoros.com/blog/running-stateful-apps-on-kubernetes-with-statefulsets/)
+  - LINK - [Should I run Postgres on Kubernetes](http://www.databasesoup.com/2018/07/should-i-run-postgres-on-kubernetes.html)
 
 **What type of load balancer am I using?**
+
+  - Amazon EKS supports the Network Load Balancer and the Classic Load Balancer through the Kubernetes service of type LoadBalancer
 
 **What other type of chaos testing can I apply on my deployment?**
 
@@ -50,6 +53,7 @@ hypothesis:
 **How would I improve my infrastructure?** 
   
   - knowing what I know now, how would I change the components (spark, postgres, flask) of my deployment?
+  - flask proxy
   
 **How does Spark on Kubernetes compare with yarn and mesos?**
 
