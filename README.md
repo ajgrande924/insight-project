@@ -18,6 +18,7 @@
     - 4.2 Deployment of Spark on Kubernetes cluster
     - 4.3 Deployment of Postgres on Kubernetes cluster
   - [5.0 Future Work](README.md#future-work)
+    - 5.1 Remove Tiller dependency from Helm
   - [6.0 Development](README.md#development)
     - 6.1 Build and Deploy Data Pipeline
   - [7.0 Miscellaneous](README.md#miscellaneous)
@@ -164,7 +165,6 @@ Base off of thes results, I would try to:
   - minimize the time it takes for the postgres slave pod to self heal
   - increase the amount of concurrent users the application can handle
 
-
 ### 3.5 Pipeline Limitations
 
 **Postgres SQL queries from Flask**
@@ -232,6 +232,10 @@ todo
 
 ## 5.0 Future Work
 
+### 5.1 Remove Tiller dependency from Helm
+
+As of this writing, Helm 3 is currently still in beta. The new release of Helm removes the dependency of the server side component, Tiller, which poses a potential security vulnerability. By default, Tiller runs with admin priviledges to do a manual port-forward to a pod. To remove the dependency from Tiller with Helm 2, there is the option of using helm client side templating by generating yaml templates using helm charts and executing with kubectl.
+
   - [ ] move from AWS EKS to KOPS for more flexibility
   - [ ] convert deployment of instances within Kubernetes cluster to terraform
   - [ ] create one click deploy and destroy of entire infrastructure
@@ -250,7 +254,7 @@ To build and deploy the data pipeline, you will need the following dependencies:
   - `awscli`
   - `docker`
   - `kubetcl`
-  - `helm`
+  - `helm @ = 2.x.x`
   - `aws-iam-authenticator`
   - `terraform @ >= 0.12`
 
