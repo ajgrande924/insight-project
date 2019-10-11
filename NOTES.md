@@ -45,6 +45,14 @@ hypothesis:
 
 **What other type of chaos testing can I apply on my deployment?**
 
+Generic Chaos on Kubernetes resources:
+
+  - container kill
+  - pod kill
+  - network delay
+  - network loss
+  - cpu hog
+
 **What does multi-tenancy mean?**
 
 <p align="center"> 
@@ -53,9 +61,9 @@ hypothesis:
 
 The users of the cluster are divided into three different roles, depending on their privilege:
 
-  - Cluster administrator: This role is for administrators of the entire cluster, who manage all tenants. Cluster administrators can create, read, update, and delete any policy object. They can create namespaces and assign them to namespace administrators.
-  - Namespace administrator: This role is for administrators of specific, single tenants. A namespace administrator can manage the users in their namespace.
-  - Developer: Members of this role can create, read, update, and delete namespaced non-policy objects like Pods, Jobs, and Ingresses. Developers only have these privileges in the namespaces they have access to.
+  - **Cluster administrator**: This role is for administrators of the entire cluster, who manage all tenants. Cluster administrators can create, read, update, and delete any policy object. They can create namespaces and assign them to namespace administrators.
+  - **Namespace administrator**: This role is for administrators of specific, single tenants. A namespace administrator can manage the users in their namespace.
+  - **Developer**: Members of this role can create, read, update, and delete namespaced non-policy objects like Pods, Jobs, and Ingresses. Developers only have these privileges in the namespaces they have access to.
 
 **Why am I running the Spark cluster in one availability zone?**
 
@@ -65,12 +73,16 @@ The users of the cluster are divided into three different roles, depending on th
 **How would I improve my infrastructure?** 
   
   - knowing what I know now, how would I change the components (spark, postgres, flask) of my deployment?
-  - flask proxy
+  - LINK - [apache-spark-alternatives](https://www.whizlabs.com/blog/apache-spark-alternatives/)
   
 **How does Spark on Kubernetes compare with yarn and mesos?**
 
   - LINK - [Stackoverflow: spark-over-kubernetes-vs-yarn-hadoop-ecosystem](https://stackoverflow.com/questions/51034935/spark-over-kubernetes-vs-yarn-hadoop-ecosystem)
   - LINK - [Apache Spark on Kubernetes](https://databricks.com/session/apache-spark-on-kubernetes)
+
+**What about pod resource limits?**
+
+**What about auto scaling?**
 
 **What metrics to collect for Chaos Engineering?**
 
@@ -109,3 +121,4 @@ The users of the cluster are divided into three different roles, depending on th
   - [chaos engineering monitoring metrics guide](https://www.gremlin.com/community/tutorials/chaos-engineering-monitoring-metrics-guide/)
   - [Why run Spark on Kubernetes?](https://medium.com/@rachit1arora/why-run-spark-on-kubernetes-51c0ccb39c9b)
   - [create a production ready postgresql cluster bitnami kubernetes and helm](https://engineering.bitnami.com/articles/create-a-production-ready-postgresql-cluster-bitnami-kubernetes-and-helm.html)
+  
