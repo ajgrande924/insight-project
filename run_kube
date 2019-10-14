@@ -98,6 +98,7 @@ setup_monitoring () {
   --set grafana.service.type=LoadBalancer
   kubectl --namespace monitoring get pods -l "release=prom-monitor"
   echo ">>> setup_monitoring complete"
+  echo ">>> need to add grafana dashboard: id=6784"
 }
 
 setup_dashboards () {
