@@ -105,6 +105,12 @@ The users of the cluster are divided into three different roles, depending on th
     - Context
     - Breadcrumbs
 
+**What challenges did you run into containerizing the application?**
+**Any challenges on postgres replicas?**
+**What did you use to do chaos experiments? How many pods were you running at one time?**
+**In terms of blast radius, were there any unexpected incidents?**
+**Did you fine tune or reconfigure anything?**
+
 #### things to keep in mind for presentation
 
   - make sure to mention that I am working on top of someone elses project
