@@ -165,6 +165,53 @@ Base off of thes results, I would try to:
   - minimize the time it takes for the postgres slave pod to self heal
   - increase the amount of concurrent users the application can handle
 
+To increase the amount of concurrent users I can add a Horizontal Pod Autoscaler (HPA) to both my flask deployment and Postgres StatefulSet. The kubectl commands would look something like this:
+```sh
+# flask deployment
+kubectl autoscale deployment scale-app --cpu-percent=50 --min=3 --max=9
+```
+
+The yaml to autoscale the Postgres StatefulSet would look something like this:
+```yaml
+# postgres statefulset
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: YOUR_HPA_NAME
+spec:
+  maxReplicas: 9
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: YOUR_STATEFUL_SET_NAME
+  targetCPUUtilizationPercentage: 80
+```
+
+To protect application from disruptions, a PodDisruptionBudget (PDB) can also be implemented, defining `minAvailable` and/or `maxUnavailable`:
+```yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: sa-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: scale-app
+```
+```yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: sa-pdb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: scale-app
+```
+
 ### 3.5 Pipeline Limitations
 
 **Postgres SQL queries from Flask**

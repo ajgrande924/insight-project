@@ -146,6 +146,7 @@ The users of the cluster are divided into three different roles, depending on th
     targetCPUUtilizationPercentage: 80
   ```
   - LINK - [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+  - LINK - [Pod Disruptions](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/)
 
 **What about pod resource limits?**
 
