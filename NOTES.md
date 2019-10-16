@@ -80,10 +80,6 @@ The users of the cluster are divided into three different roles, depending on th
   - LINK - [Stackoverflow: spark-over-kubernetes-vs-yarn-hadoop-ecosystem](https://stackoverflow.com/questions/51034935/spark-over-kubernetes-vs-yarn-hadoop-ecosystem)
   - LINK - [Apache Spark on Kubernetes](https://databricks.com/session/apache-spark-on-kubernetes)
 
-**What about pod resource limits?**
-
-**What about auto scaling?**
-
 **What metrics to collect for Chaos Engineering?**
 
   - Infrastructure Monitoring Metrics
@@ -111,7 +107,7 @@ The users of the cluster are divided into three different roles, depending on th
 
 **Any challenges on postgres stateful set?**
 
-  - 
+  - engineering challenge in readme
 
 **What did you use to do chaos experiments? How many pods were you running at one time?**
 
@@ -123,9 +119,35 @@ The users of the cluster are divided into three different roles, depending on th
 
 **Did you fine tune or reconfigure anything?**
 
-**How do you scale up your existing infrastructure?**
+  - autoscaling?
 
-**What about checking to see if autoscaling does scale down correctly?**
+**What about auto scaling? How do you scale up your existing infrastructure? What about checking to see if autoscaling does scale down correctly?**
+
+  - The Horizontal Pod Autoscaler automatically scales the number of pods in a replication controller, deployment or replica set based on observed CPU utilization (or, with custom metrics support, on some other application-provided metrics). Note that Horizontal Pod Autoscaling does not apply to objects that can’t be scaled, for example, DaemonSets.
+  - HPA will increase and decrease the number of replicas (via the deployment) to maintain an average CPU utilization across all Pods of 50%
+  ```sh
+  # example of how to autoscale base off cpu
+  # using flask app w/ a min of 3, max of 9, and 50% cpu utilization
+  kubectl autoscale deployment scale-app --cpu-percent=50 --min=3 --max=9
+  ```
+  - Here is an example for a StatefulSet (able to autoscale since Kubernetes 1.9): 
+  ```yaml
+  apiVersion: autoscaling/v1
+  kind: HorizontalPodAutoscaler
+  metadata:
+    name: YOUR_HPA_NAME
+  spec:
+    maxReplicas: 3
+    minReplicas: 1
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: YOUR_STATEFUL_SET_NAME
+    targetCPUUtilizationPercentage: 80
+  ```
+  - LINK - [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+
+**What about pod resource limits?**
 
 #### things to keep in mind for presentation
 

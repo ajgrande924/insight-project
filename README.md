@@ -228,7 +228,16 @@ Currently as of `spark=2.4.4`, Kubernetes integration with Spark is still experi
 
 ### 4.3 Deployment of Postgres on Kubernetes cluster
 
-todo
+Another challenge that I encountered was deploying Postgres on Kubernetes. During the initial testing phase, I created my own Kubernetes configurations for the StatefulSet but realized that I was missing a few things:
+
+  - once my Spark job completed, the data was sent to a Postgres pod but was not replicated to the other pods in the StatefulSet
+  - the data did not persist when I restarted the Postgres cluster
+
+I ended up using the `stable/postgresql` Helm chart which deployed the StatefulSet with master/slave replication. The default configurations on Helm Github had a bug that caused write requests to hang, so I used a workaround to get it working, which was identified in the bug report. There is a single master replica in the same availability zone as the spark cluster and worker replicas on each availability zone. Each replica has a PVC, with an EBS volume attached to each pod.
+
+<p align="center"> 
+  <img src="./media/insight_challenge_pg.png" alt="insight_challenge_pg" width="450px"/>
+</p>
 
 ## 5.0 Future Work
 
