@@ -106,10 +106,26 @@ The users of the cluster are divided into three different roles, depending on th
     - Breadcrumbs
 
 **What challenges did you run into containerizing the application?**
-**Any challenges on postgres replicas?**
+
+  - refactor code for the existing data pipeline including flask application code and pyspark code
+
+**Any challenges on postgres stateful set?**
+
+  - 
+
 **What did you use to do chaos experiments? How many pods were you running at one time?**
+
+  - I used kube monkey to terminate pods
+
 **In terms of blast radius, were there any unexpected incidents?**
+
+  - self heal?
+
 **Did you fine tune or reconfigure anything?**
+
+**How do you scale up your existing infrastructure?**
+
+**What about checking to see if autoscaling does scale down correctly?**
 
 #### things to keep in mind for presentation
 
